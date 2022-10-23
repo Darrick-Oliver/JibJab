@@ -1,7 +1,17 @@
-const mongoose = require("mongoose");
+import { Schema, model } from 'mongoose'
 const uniqueValidator = require('mongoose-unique-validator');
 
-const UserSchema = new mongoose.Schema({
+export interface IUser {
+    first_name: string,
+    last_name: string,
+    username: string,
+    joined: Date,
+    bio?: string,
+    password: string,
+    access_token: string
+} 
+
+const UserSchema: Schema = new Schema<IUser>({
     first_name: { type: String, required: true, maxLength: 100 },
     last_name: { type: String, required: true, maxLength: 100 },
     username: { type: String, required: true, maxLength: 40, unique: true, uniqueCaseInsensitive: true },
@@ -15,4 +25,4 @@ UserSchema.plugin(uniqueValidator, {
     message: 'Error, {PATH} must be unique.'
 });
 
-module.exports = mongoose.model('UserSchema', UserSchema);
+export default model<IUser>('UserSchema', UserSchema);
