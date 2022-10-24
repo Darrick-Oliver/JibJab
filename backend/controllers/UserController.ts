@@ -10,6 +10,7 @@ export class UserController {
         @BodyParam('first_name') first_name: string,
         @BodyParam('last_name') last_name: string,
         @BodyParam('password') password: string,
+        @BodyParam('email') email: string,
     ) {
         // TODO: Add username, firstname, lastname, password checks. Generate jwt
         
@@ -19,6 +20,7 @@ export class UserController {
             first_name: first_name,
             last_name: last_name,
             password: password,
+            email: email,
             joined: new Date(),
             access_token: 'test'
         };
