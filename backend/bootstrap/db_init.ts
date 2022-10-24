@@ -3,7 +3,7 @@ import { useContainer } from 'routing-controllers';
 import { Container } from 'typescript-ioc';
 import mongoose from 'mongoose';
 
-const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${process.env.MONGO_CLUSTER}/?retryWrites=true&w=majority`;
+const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${process.env.MONGO_CLUSTER}/JibJab?retryWrites=true&w=majority`;
 
 export const bootstrapDB = () => {
 	// Register typescript-ioc

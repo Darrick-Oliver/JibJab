@@ -9,7 +9,7 @@ export interface IUser {
     bio?: string,
     password: string,
     access_token: string
-} 
+}
 
 const UserSchema: Schema = new Schema<IUser>({
     first_name: { type: String, required: true, maxLength: 100 },
