@@ -12,6 +12,7 @@ export class UserController {
         @BodyParam('last_name') last_name: string,
         @BodyParam('email') email: string,
         @BodyParam('password') password: string,
+        @BodyParam('email') email: string,
     ) {
         // TODO: Add username, firstname, lastname, password checks. Generate jwt
         if (!username || !first_name || !last_name || !email || !password) {
@@ -24,6 +25,7 @@ export class UserController {
             last_name: last_name,
             email: email,
             password: password,
+            email: email,
             joined: new Date(),
             access_token: 'test'
         };

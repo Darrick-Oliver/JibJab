@@ -16,7 +16,7 @@ const UserSchema: Schema = new Schema<IUser>({
     first_name: { type: String, required: true, maxLength: 100 },
     last_name: { type: String, required: true, maxLength: 100 },
     username: { type: String, required: true, maxLength: 40, unique: true, uniqueCaseInsensitive: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, maxLength: 100, unique: true, uniqueCaseInsensitive: true },
     joined: { type: Date, required: true },
     bio: { type: String, required: false, maxLength: 240 },
     password: { type: String, required: true },
