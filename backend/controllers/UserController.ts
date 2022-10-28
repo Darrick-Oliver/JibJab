@@ -1,5 +1,6 @@
 import { BodyParam, Get, HttpCode, JsonController, Post, Req, Res } from "routing-controllers";
-import User, { IUser } from '../models/User'
+import User, { IUser } from '../models/User';
+import { successMessage, errorMessage } from '../utils/returns';
 
 @JsonController()
 export class UserController {
@@ -9,18 +10,17 @@ export class UserController {
         @BodyParam('username') username: string,
         @BodyParam('first_name') first_name: string,
         @BodyParam('last_name') last_name: string,
-        @BodyParam('password') password: string,
         @BodyParam('email') email: string,
+        @BodyParam('password') password: string,
     ) {
         // TODO: Add username, firstname, lastname, password checks. Generate jwt
-        
 
         const userInfo: IUser = {
             username: username,
             first_name: first_name,
             last_name: last_name,
-            password: password,
             email: email,
+            password: password,
             joined: new Date(),
             access_token: 'test'
         };
@@ -41,21 +41,5 @@ export class UserController {
                 return errorMessage('Unknown error');
             }
         }
-    }
-}
-
-const successMessage = (data?: string | {}) => {
-    return {
-        error: false,
-        errorMessage: null,
-        data: data
-    }
-}
-
-const errorMessage = (message: string) => {
-    return {
-        error: true,
-        errorMessage: message,
-        data: null
     }
 }
