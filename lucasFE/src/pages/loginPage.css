@@ -5,7 +5,7 @@
     font-style: normal;
 }
 
-.loginBack{
+.loginBack {
     background-color: white;
     width: 60%;
     height: 100%;
@@ -17,13 +17,13 @@
     justify-content: space-around;
 }
 
-.logo{
+.logo {
     width: 259px;
     height: 270px;
     border: 8px solid #465362;
 }
 
-.input{
+.input {
     height: 150px;
     width: 400px;
     display: flex;
@@ -32,7 +32,7 @@
     justify-content: space-around;
 }
 
-.cover{
+.cover {
     background-color: white;
     height: 100%;
     width: 100%;
@@ -40,23 +40,23 @@
     justify-content: space-around;
 }
 
-.username{
+.username {
     width: 400px;
     height: 40px;
-    background: #D9D9D9;
+    background: #d9d9d9;
     box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
 }
 
-.password{
+.password {
     width: 400px;
     height: 40px;
-    background: #D9D9D9;
+    background: #d9d9d9;
     box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 5px;  
+    border-radius: 5px;
 }
 
-input[type=text]{
+/* input[type='text'] {
     border: none;
     height: 2.5em;
     width: 90%;
@@ -66,7 +66,7 @@ input[type=text]{
     font-size: large;
 }
 
-input[type=password]{
+input[type='password'] {
     border: none;
     height: 2.5em;
     width: 90%;
@@ -76,19 +76,19 @@ input[type=password]{
     font-size: large;
 }
 
-input[type=submit]{
+input[type='submit'] {
     height: 2em;
     width: 30%;
     font-size: 1.5em;
-    background-color: #D17A22;
+    background-color: #d17a22;
     border: none;
     color: white;
 }
 
-input::placeholder{
+input::placeholder {
     font-weight: bold;
     font-size: large;
-}
+} */
 
 /*
 input:focus{
