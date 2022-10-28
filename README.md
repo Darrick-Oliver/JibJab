@@ -2,13 +2,9 @@
 307 Project
 
 
-## For backend !!!
 Setting up ESL Lint:
 
 npm init @eslint/config --save-dev
-
-Terminal commands:
-![alt text](https://github.com/Darrick-Oliver/JibJab/blob/main/JibJab_backend_ESLint_commands.png?raw=true)
 
 
 Setting up Prettier:
