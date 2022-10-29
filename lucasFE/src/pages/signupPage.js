@@ -170,7 +170,12 @@ export default function SignUp() {
                             <Grid item>
                                 <RouterLink to="/">
                                     <Link color="primary">
-                                        Already have an account? Sign in
+                                        <Typography
+                                            component="h1"
+                                            variant="body1"
+                                        >
+                                            Already have an account? Sign in
+                                        </Typography>
                                     </Link>
                                 </RouterLink>
                             </Grid>
