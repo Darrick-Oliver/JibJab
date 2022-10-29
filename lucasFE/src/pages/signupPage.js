@@ -7,9 +7,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 import { Link as RouterLink } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
 
 function Copyright(props) {
     return (
@@ -28,24 +28,6 @@ function Copyright(props) {
         </Typography>
     );
 }
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#D17A22',
-        },
-        secondary: {
-            main: '#465362',
-        },
-        background: {
-            default: '#465362',
-            paper: '#FFFFFF',
-        },
-        error: {
-            main: red.A400,
-        },
-    },
-});
 
 export default function SignUp() {
     const handleSubmit = (event) => {
@@ -156,16 +138,18 @@ export default function SignUp() {
                                 />
                             </Grid>
                         </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 5, mb: 3, p: 3 }}
-                        >
-                            <Typography component="h1" variant="h5">
-                                Create Account
-                            </Typography>
-                        </Button>
+                        <RouterLink to="/">
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 5, mb: 3, p: 3 }}
+                            >
+                                <Typography component="h1" variant="h5">
+                                    Create Account
+                                </Typography>
+                            </Button>
+                        </RouterLink>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <RouterLink to="/">
