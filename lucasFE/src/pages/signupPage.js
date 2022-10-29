@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { Link as RouterLink } from 'react-router-dom';
 
 function Copyright(props) {
     return (
@@ -167,9 +168,11 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    Already have an account? Sign in
-                                </Link>
+                                <RouterLink to="/">
+                                    <Link color="primary">
+                                        Already have an account? Sign in
+                                    </Link>
+                                </RouterLink>
                             </Grid>
                         </Grid>
                     </Box>
