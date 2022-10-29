@@ -1,7 +1,7 @@
 import React from 'react';
 import './loginPage.css';
 import logo from './jibJabLogo.png';
-// import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 const LoginPage = () => {
     return (
@@ -20,7 +20,9 @@ const LoginPage = () => {
                         className="password"
                     />
                 </div>
-                <input type="submit" value="Login"></input>
+                <RouterLink to="/portal">
+                    <input type="submit" value="Login"></input>
+                </RouterLink>
             </div>
         </div>
     );
