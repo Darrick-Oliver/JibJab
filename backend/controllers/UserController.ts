@@ -1,6 +1,15 @@
-import { BodyParam, Get, HttpCode, JsonController, Post, Req, Res } from "routing-controllers";
+import {
+    Body,
+    BodyParam,
+    Get,
+    HttpCode,
+    JsonController,
+    Post,
+} from "routing-controllers";
 import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
+import { sign } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 @JsonController()
 export class UserController {
@@ -11,35 +20,54 @@ export class UserController {
         @BodyParam('first_name') first_name: string,
         @BodyParam('last_name') last_name: string,
         @BodyParam('email') email: string,
-        @BodyParam('password') password: string,
+        @BodyParam('password') password: string
     ) {
-        // TODO: Add username, firstname, lastname, password checks. Generate jwt
+        if (!username || !first_name || !last_name || !email || !password) {
+            throw errorMessage('Cannot include null values');
+        }
+        if (password.length <= 8) {
+            throw errorMessage('Password must be longer than 8 characters');
+        }
+        if (username.length <= 3) {
+            throw errorMessage('Username must be longer than 3 characters');
+        }
 
+        const hash = await hashPassword(password);
+        const token = sign({ username: username, email: email }, process.env.JWT_SECRET!);
         const userInfo: IUser = {
             username: username,
             first_name: first_name,
             last_name: last_name,
             email: email,
-            password: password,
+            password: hash,
             joined: new Date(),
-            access_token: 'test'
+            access_token: token
         };
 
-        const user = new User(userInfo);
+        const u = new User(userInfo);
         try {
-            await user.save();
+            await u.save();
             return successMessage({
                 access_token: userInfo.access_token
             });
         }
         catch (err) {
             if (typeof err === 'string') {
-                return errorMessage(err);
+                throw errorMessage(err);
             } else if (err instanceof Error) {
-                return errorMessage(err.message);
+                throw errorMessage(err.message);
             } else {
-                return errorMessage('Unknown error');
+                throw errorMessage('Unknown error');
             }
         }
     }
+}
+
+const hashPassword = (password: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        bcrypt.hash(password, 10, async (err, result: string) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
 }
