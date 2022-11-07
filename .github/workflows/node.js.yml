@@ -23,6 +23,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       working-directory: ./backend
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      run: npm ci
+    - name: Build
+      working-directory: ./backend
+      run: npm run build --if-present
+    - name: Test
+      working-directory: ./backend
+      run: npm test
