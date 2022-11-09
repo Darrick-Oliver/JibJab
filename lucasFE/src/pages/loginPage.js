@@ -1,13 +1,28 @@
 import React from 'react';
 import './loginPage.css';
 import logo from './jibJabLogo.png';
-import { Link as RouterLink } from 'react-router-dom';
 
 const LoginPage = () => {
     return (
         <div className="cover">
+            <div className="signup">
+                <h1>
+                    New to <span style={{ color: '#D17A22' }}>JibJab?</span>
+                </h1>
+                <h2>
+                    Join other young socialites on their journey to cleanse the
+                    internet of old socialites
+                </h2>
+            </div>
+
+            <button className="signUpBut" id="signup">
+                {' '}
+                Join us!
+            </button>
+
             <div className="loginBack">
                 <img src={logo} className="logo" alt="jibJabLogo"></img>
+
                 <div className="input">
                     <input
                         type="text"
@@ -20,16 +35,13 @@ const LoginPage = () => {
                         className="password"
                     />
                 </div>
-                <RouterLink to="/portal">
-                    <input type="submit" value="Login"></input>
-                </RouterLink>
+
+                <button className="signUpBut" id="submit">
+                    Login
+                </button>
             </div>
         </div>
     );
 };
 
 export default LoginPage;
-
-/*
-    <img src ={require('./jibJabLogo.png')} alt="jibjablogo"></img>
-*/
