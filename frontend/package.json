@@ -20,7 +20,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "prettier --check ./**/*.{js,jsx,ts,tsx,css,md,json}",
+        "test": "prettier --check ./src/*.{js,jsx,ts,tsx,css,md,json}",
         "eject": "react-scripts eject",
         "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc"
     },
