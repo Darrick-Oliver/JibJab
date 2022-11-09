@@ -5,7 +5,7 @@ import {
     HttpCode,
     JsonController,
     Post,
-} from "routing-controllers";
+} from 'routing-controllers';
 import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
 import { sign } from 'jsonwebtoken';
@@ -14,8 +14,8 @@ import bcrypt from 'bcrypt';
 @JsonController()
 export class UserController {
     @HttpCode(201)
-    @Post('/account/register')   
-    async register (
+    @Post('/account/register')
+    async register(
         @BodyParam('username') username: string,
         @BodyParam('first_name') first_name: string,
         @BodyParam('last_name') last_name: string,
@@ -33,7 +33,10 @@ export class UserController {
         }
 
         const hash = await hashPassword(password);
-        const token = sign({ username: username, email: email }, process.env.JWT_SECRET!);
+        const token = sign(
+            { username: username, email: email },
+            process.env.JWT_SECRET!
+        );
         const userInfo: IUser = {
             username: username,
             first_name: first_name,
@@ -41,17 +44,16 @@ export class UserController {
             email: email,
             password: hash,
             joined: new Date(),
-            access_token: token
+            access_token: token,
         };
 
         const u = new User(userInfo);
         try {
             await u.save();
             return successMessage({
-                access_token: userInfo.access_token
+                access_token: userInfo.access_token,
             });
-        }
-        catch (err) {
+        } catch (err) {
             if (typeof err === 'string') {
                 throw errorMessage(err);
             } else if (err instanceof Error) {
@@ -70,4 +72,4 @@ const hashPassword = (password: string): Promise<string> => {
             resolve(result);
         });
     });
-}
+};
