@@ -21,4 +21,3 @@ npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
 
 ### Command to run prettier format:
 	npm run format
-
