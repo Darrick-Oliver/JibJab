@@ -17,6 +17,8 @@
     "plugins": ["react"],
     "rules": {
         "react/prop-types": 0,
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "no-unused-vars": "off",
+        "jsx-quotes": [2, "prefer-single"]
     }
 }
