@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongoose';
 import {
     BodyParam,
     Get,
@@ -6,8 +5,6 @@ import {
     HttpError,
     JsonController,
     Post,
-    Req,
-    Res,
 } from 'routing-controllers';
 import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
