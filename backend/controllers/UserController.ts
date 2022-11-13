@@ -1,8 +1,8 @@
 import {
-    Body,
     BodyParam,
     Get,
     HttpCode,
+    HttpError,
     JsonController,
     Post,
 } from 'routing-controllers';
@@ -10,6 +10,7 @@ import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import 'dotenv/config';
 
 @JsonController()
 export class UserController {
@@ -62,6 +63,33 @@ export class UserController {
                 throw errorMessage('Unknown error');
             }
         }
+    }
+
+    @HttpCode(200)
+    @Post('/account/login')
+    async login(
+        @BodyParam('email') email: string,
+        @BodyParam('password') password: string
+    ) {
+        // search for user on email in db
+        const user = await User.findOne({ email: email }).lean();
+        if (!user) {
+            throw errorMessage('Email or password is incorrect');
+        }
+
+        // comparing user inputted password to db stored (hashed) password
+        const access = await bcrypt.compare(password, user.password);
+        if (!access) {
+            throw errorMessage('Email or password is incorrect');
+        }
+
+        // return jwt
+        const token = sign(
+            { username: user.username, email: user.email },
+            process.env.JWT_SECRET as string
+        );
+        const succMsg = successMessage({ access_token: token });
+        return succMsg;
     }
 }
 
