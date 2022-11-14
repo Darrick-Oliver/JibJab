@@ -29,13 +29,11 @@ export const Login = () => {
     }, [auth]);
 
     const handleSubmit = async () => {
-        console.log(email, password);
         try {
             const res = await makePostRequest('/api/account/login', {
                 email: email,
                 password: password,
             });
-            console.log(res.data.access_token);
             setAuth(res.data.access_token);
             localStorage.setItem('jwt', res.data.access_token);
         } catch (err) {
@@ -155,8 +153,9 @@ export const Login = () => {
                         fontWeight='light'
                         textAlign='center'
                     >
-                        Join other young socialites on their journey to cleanse
-                        the internet of old socialites
+                        Join now to build connections with other young
+                        socialites around you, and engage with others in a fun
+                        environment
                     </Typography>
                     <Button
                         variant='secondary'

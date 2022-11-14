@@ -16,10 +16,11 @@ export class MessageController {
     @Post('/message/create')
     async create(
         @BodyParam('message') message: string,
-        @BodyParam('location') location: string,
+        @BodyParam('latitude') latitude: number,
+        @BodyParam('longitude') longitude: number,
         @CurrentUser() user: any
     ) {
-        if (!message || !location) {
+        if (!message || !latitude || !longitude) {
             throw errorMessage('Cannot include null values');
         }
         if (message.length > 281) {
@@ -30,13 +31,13 @@ export class MessageController {
             username: user.username,
             message: message,
             time: new Date(),
-            location: location,
+            location: `${latitude}, ${longitude}`,
         };
 
         const m = new Message(messageInfo);
         try {
             await m.save();
-            return successMessage({ id: m._id });
+            return successMessage({ id: m._id, username: m.username, time: m.time, message: m.message });
         } catch (err) {
             if (typeof err === 'string') {
                 throw errorMessage(err);
