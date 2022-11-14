@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createExpressServer, Action } from 'routing-controllers';
+import { createExpressServer } from 'routing-controllers';
 import { bootstrapDB } from './bootstrap/db_init';
 import { userChecker } from './utils/userChecker';
 
@@ -9,5 +9,5 @@ export const app = createExpressServer({
     cors: true,
     controllers: [`${__dirname}/controllers/*.ts`], // we specify controllers we want to use
     routePrefix: '/api',
-    currentUserChecker: userChecker
+    currentUserChecker: userChecker,
 });

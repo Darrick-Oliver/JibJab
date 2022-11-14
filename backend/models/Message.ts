@@ -18,7 +18,7 @@ const MessageSchema: Schema = new Schema<IMessage>({
         maxLength: 281,
     },
     time: { type: Date, required: true },
-    location: { type: String }
+    location: { type: String },
 });
 
 export default model<IMessage>('MessageSchema', MessageSchema);

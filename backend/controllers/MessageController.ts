@@ -17,7 +17,7 @@ export class MessageController {
     async create(
         @BodyParam('message') message: string,
         @BodyParam('location') location: string,
-        @CurrentUser() user: any,
+        @CurrentUser() user: any
     ) {
         if (!message || !location) {
             throw errorMessage('Cannot include null values');
@@ -50,9 +50,7 @@ export class MessageController {
 
     @HttpCode(200)
     @Get('/message/getAll')
-    async getAll(
-        @CurrentUser() user: any
-    ) {
+    async getAll(@CurrentUser() user: any) {
         const messages = await Message.find({}).lean().select({
             _id: 1,
             username: 1,
