@@ -18,7 +18,7 @@ import { makePostRequest } from '../utils/requests';
 export const Login = () => {
     const [auth, setAuth] = useContext(AuthContext);
     const [error, setError] = useState();
-    const [username, setUsername] = useState();
+    const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const nav = useNavigate();
 
@@ -29,14 +29,15 @@ export const Login = () => {
     }, [auth]);
 
     const handleSubmit = async () => {
-        console.log(username, password);
+        console.log(email, password);
         try {
             const res = await makePostRequest('/api/account/login', {
-                username: username,
+                email: email,
                 password: password,
             });
             console.log(res.data.access_token);
             setAuth(res.data.access_token);
+            localStorage.setItem('jwt', res.data.access_token);
         } catch (err) {
             setError(err.errorMessage);
         }
@@ -87,13 +88,11 @@ export const Login = () => {
                                 <TextField
                                     required
                                     fullWidth
-                                    id='username'
-                                    label='Username'
-                                    name='username'
-                                    autoComplete='username'
-                                    onChange={(e) =>
-                                        setUsername(e.target.value)
-                                    }
+                                    id='email'
+                                    label='Email'
+                                    name='email'
+                                    autoComplete='email'
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>

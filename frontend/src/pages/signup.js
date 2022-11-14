@@ -77,6 +77,8 @@ export const SignUp = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
                         borderRadius: 5,
                         fontFamily: 'Inter',
                     }}

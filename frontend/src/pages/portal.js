@@ -7,11 +7,11 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link as RouterLink } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import { AuthContext } from '../App';
 import { useNavigate } from 'react-router-dom';
+import LogoutIcon from './logout.svg';
 
 export const Portal = () => {
     const [auth, setAuth] = useContext(AuthContext);
@@ -33,10 +33,8 @@ export const Portal = () => {
         <ThemeProvider theme={theme}>
             <Grid container justifyContent='flex-end'>
                 <Grid item>
-                    <Button onClick={handleLogout}>
-                        <Typography component='h1' variant='body1'>
-                            Logout
-                        </Typography>
+                    <Button onClick={handleLogout} sx={{ px: 2 }}>
+                        <img src={LogoutIcon} alt='Logout' />
                     </Button>
                 </Grid>
             </Grid>
@@ -44,10 +42,8 @@ export const Portal = () => {
                 <CssBaseline />
                 <Box
                     sx={{
-                        boxShadow: 10,
-                        p: 4,
+                        p: 2,
                         backgroundColor: '#2B333D',
-                        marginTop: 5,
                         borderRadius: 5,
                         fontFamily: 'Inter',
                     }}
@@ -62,7 +58,7 @@ export const Portal = () => {
                                 variant='filled'
                                 sx={{
                                     background: '#FFFFFF',
-                                    borderRadius: 1,
+                                    borderRadius: 2,
                                 }}
                             />
                         </Grid>
@@ -70,7 +66,7 @@ export const Portal = () => {
                             <Button
                                 type='submit'
                                 variant='contained'
-                                sx={{ mt: 2, mb: -2, p: 1 }}
+                                sx={{ mt: 2, p: 1 }}
                             >
                                 <Typography fontWeight='bold'>
                                     Jab&nbsp;&nbsp;
