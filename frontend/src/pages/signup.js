@@ -57,6 +57,7 @@ export const SignUp = () => {
         try {
             const res = await makePostRequest('/api/account/register', user);
             setAuth(res.data.access_token);
+            localStorage.setItem('jwt', res.data.access_token);
             nav('/');
         } catch (err) {
             setError(err.errorMessage);

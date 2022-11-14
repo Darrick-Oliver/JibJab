@@ -25,6 +25,7 @@ export const Portal = () => {
 
     const handleLogout = () => {
         setAuth(null);
+        localStorage.removeItem('jwt');
         nav('/');
     };
 
