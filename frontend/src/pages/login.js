@@ -31,10 +31,11 @@ export const Login = () => {
     const handleSubmit = async () => {
         console.log(username, password);
         try {
-            const res = await makePostRequest(
-                'http://localhost:3001/api/account/login',
-                { username: username, password: password }
-            );
+            const res = await makePostRequest('/api/account/login', {
+                username: username,
+                password: password,
+            });
+            console.log(res.data.access_token);
             setAuth(res.data.access_token);
         } catch (err) {
             setError(err.errorMessage);
@@ -46,72 +47,133 @@ export const Login = () => {
             <CssBaseline />
             <Box
                 sx={{
-                    width: '60%',
-                    height: '100vh',
-                    boxShadow: 20,
-                    backgroundColor: 'white',
                     display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontFamily: 'Inter',
+                    height: '100vh',
+                    flexDirection: 'row',
                 }}
             >
-                <img
-                    src={logo}
-                    style={{
-                        width: 200,
-                        border: '5px solid #465362',
-                        borderColor: '#465362',
-                        borderRadius: 5,
-                        paddingTop: 10,
-                        paddingBottom: 10,
+                <Box
+                    sx={{
+                        height: '100%',
+                        boxShadow: 20,
+                        backgroundColor: 'white',
+                        display: 'flex',
+                        flex: 2,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontFamily: 'Inter',
                     }}
-                />
-                <Box component='form' noValidate sx={{ mt: 5 }}>
-                    <Grid
-                        container
-                        spacing={2}
-                        alignItems='center'
-                        justifyContent='center'
+                >
+                    <img
+                        src={logo}
+                        style={{
+                            width: 200,
+                            border: '5px solid #465362',
+                            borderColor: '#465362',
+                            borderRadius: 5,
+                            paddingTop: 10,
+                            paddingBottom: 10,
+                        }}
+                    />
+                    <Box component='form' noValidate sx={{ mt: 5, width: 500 }}>
+                        <Grid
+                            container
+                            spacing={2}
+                            alignItems='center'
+                            justifyContent='center'
+                        >
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id='username'
+                                    label='Username'
+                                    name='username'
+                                    autoComplete='username'
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name='password'
+                                    label='Password'
+                                    type='password'
+                                    id='password'
+                                    autoComplete='password'
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+                            </Grid>
+                            {error && (
+                                <Typography sx={{ color: 'red' }}>
+                                    Error: {error}
+                                </Typography>
+                            )}
+                        </Grid>
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            sx={{ mt: 5, mb: 3, p: 2 }}
+                            onClick={() => handleSubmit()}
+                        >
+                            <Typography variant='h1' fontSize={24}>
+                                Login
+                            </Typography>
+                        </Button>
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontFamily: 'Inter',
+                        p: 5,
+                    }}
+                >
+                    <Typography
+                        component='h1'
+                        color='#fff'
+                        fontWeight='bold'
+                        fontSize={32}
                     >
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id='username'
-                                label='Username'
-                                name='username'
-                                autoComplete='username'
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name='password'
-                                label='Password'
-                                type='password'
-                                id='password'
-                                autoComplete='password'
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </Grid>
-                        <Typography variant='body1'>
-                            Forgot your password? Click <Link>here</Link>
-                        </Typography>
-
-                        {error && <Typography>{error}</Typography>}
-                    </Grid>
+                        New to <span style={{ color: '#D17A22' }}>JibJab</span>?
+                    </Typography>
+                    <Typography
+                        component='body'
+                        sx={{ color: '#fff' }}
+                        fontSize={20}
+                        fontWeight='light'
+                        textAlign='center'
+                    >
+                        Join other young socialites on their journey to cleanse
+                        the internet of old socialites
+                    </Typography>
                     <Button
-                        fullWidth
-                        variant='contained'
-                        sx={{ mt: 5, mb: 3, p: 2 }}
-                        onClick={() => handleSubmit()}
+                        variant='secondary'
+                        sx={{
+                            mt: 5,
+                            p: 2,
+                            width: 300,
+                        }}
+                        onClick={() => nav('/signup')}
                     >
-                        <Typography variant='h1' fontSize={20}>
-                            Login
+                        <Typography
+                            variant='h1'
+                            fontSize={24}
+                            color={'#D17A22'}
+                        >
+                            Sign up
                         </Typography>
                     </Button>
                 </Box>

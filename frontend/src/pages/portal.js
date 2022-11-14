@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/SendOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +16,12 @@ import { useNavigate } from 'react-router-dom';
 export const Portal = () => {
     const [auth, setAuth] = useContext(AuthContext);
     const nav = useNavigate();
+
+    useEffect(() => {
+        if (!auth) {
+            nav('/');
+        }
+    });
 
     const handleLogout = () => {
         setAuth(null);

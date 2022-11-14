@@ -23,6 +23,27 @@ const theme = createTheme({
             textTransform: 'none',
         },
     },
+    components: {
+        MuiButton: {
+            variants: [
+                {
+                    props: { variant: 'primary' },
+                    style: {
+                        backgroundColor: '#D17A22',
+                    },
+                },
+                {
+                    props: { variant: 'secondary' },
+                    style: {
+                        backgroundColor: '#fff',
+                        '&:hover': {
+                            backgroundColor: '#d8d8d8',
+                        },
+                    },
+                },
+            ],
+        },
+    },
 });
 
 export default theme;

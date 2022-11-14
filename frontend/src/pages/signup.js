@@ -1,15 +1,20 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { useContext, useState } from 'react';
+import {
+    Button,
+    CssBaseline,
+    TextField,
+    Grid,
+    Link,
+    Box,
+    Typography,
+    ThemeProvider,
+    Container,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../App';
+import { makePostRequest } from '../utils/requests';
 
 const Copyright = (props) => {
     return (
@@ -30,13 +35,32 @@ const Copyright = (props) => {
 };
 
 export const SignUp = () => {
-    const handleSubmit = (event) => {
+    const [auth, setAuth] = useContext(AuthContext);
+    const [error, setError] = useState();
+    const nav = useNavigate();
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        const user = {
+            first_name: data.get('firstName'),
+            last_name: data.get('lastName'),
+            username: data.get('username'),
             email: data.get('email'),
             password: data.get('password'),
-        });
+        };
+
+        if (user.password != data.get('confirmpassword')) {
+            setError('Passwords do not match');
+        }
+
+        try {
+            const res = await makePostRequest('/api/account/register', user);
+            setAuth(res.data.access_token);
+            nav('/');
+        } catch (err) {
+            setError(err.errorMessage);
+        }
     };
 
     return (
@@ -138,18 +162,18 @@ export const SignUp = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <RouterLink to='/'>
-                            <Button
-                                type='submit'
-                                fullWidth
-                                variant='contained'
-                                sx={{ mt: 5, mb: 3, p: 3 }}
-                            >
-                                <Typography component='h1' variant='h5'>
-                                    Create Account
-                                </Typography>
-                            </Button>
-                        </RouterLink>
+                        {error && <Typography>Error: {error}</Typography>}
+
+                        <Button
+                            type='submit'
+                            fullWidth
+                            variant='contained'
+                            sx={{ mt: 5, mb: 3, p: 2 }}
+                        >
+                            <Typography component='h1' variant='h5'>
+                                Create Account
+                            </Typography>
+                        </Button>
                         <Grid container justifyContent='flex-end'>
                             <Grid item>
                                 <RouterLink to='/'>

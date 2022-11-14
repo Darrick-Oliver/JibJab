@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Login } from './pages/login';
-import { SignUp } from './pages/signupPage';
+import { SignUp } from './pages/signup';
 import { Portal } from './pages/portal';
 
 export const AuthContext = React.createContext();
