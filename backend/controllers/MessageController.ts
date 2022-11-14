@@ -37,7 +37,12 @@ export class MessageController {
         const m = new Message(messageInfo);
         try {
             await m.save();
-            return successMessage({ id: m._id, username: m.username, time: m.time, message: m.message });
+            return successMessage({
+                id: m._id,
+                username: m.username,
+                time: m.time,
+                message: m.message,
+            });
         } catch (err) {
             if (typeof err === 'string') {
                 throw errorMessage(err);
