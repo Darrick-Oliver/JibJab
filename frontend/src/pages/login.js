@@ -1,44 +1,45 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-//import Container from '@mui/material/Container';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+    Button,
+    CssBaseline,
+    TextField,
+    Grid,
+    Link,
+    Box,
+    Typography,
+    ThemeProvider,
+} from '@mui/material';
 import logo from './jibJabLogo.png';
-import { Link as RouterLink } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
-// import { Image } from 'mui-image';
+import { AuthContext } from '../App';
+import { useNavigate } from 'react-router-dom';
+import { makePostRequest } from '../utils/requests';
 
-// function Copyright(props) {
-//     return (
-//         <Typography
-//             variant="body2"
-//             color="text.secondary"
-//             align="center"
-//             {...props}
-//         >
-//             {'Copyright © '}
-//             <Link color="inherit" href="https://mui.com/">
-//                 The Young Socialites
-//             </Link>{' '}
-//             {new Date().getFullYear()}
-//             {'.'}
-//         </Typography>
-//     );
-// }
+export const Login = () => {
+    const [auth, setAuth] = useContext(AuthContext);
+    const [error, setError] = useState();
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
+    const nav = useNavigate();
 
-export default function SignUp() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    useEffect(() => {
+        if (auth) {
+            nav('/portal');
+        }
+    }, [auth]);
+
+    const handleSubmit = async () => {
+        console.log(username, password);
+        try {
+            const res = await makePostRequest('/api/account/login', {
+                username: username,
+                password: password,
+            });
+            console.log(res.data.access_token);
+            setAuth(res.data.access_token);
+        } catch (err) {
+            setError(err.errorMessage);
+        }
     };
 
     return (
@@ -46,79 +47,137 @@ export default function SignUp() {
             <CssBaseline />
             <Box
                 sx={{
-                    width: 1138 / 1920,
-                    height: '100vh',
-                    boxShadow: 20,
-                    p: 10,
-                    backgroundColor: 'white',
                     display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    fontFamily: 'Inter',
+                    height: '100vh',
+                    flexDirection: 'row',
                 }}
             >
-                <img
-                    src={logo}
-                    style={{
-                        width: 200,
-                        border: 8,
-                        borderColor: '#465362',
-                    }}
-                />
                 <Box
-                    component="form"
-                    noValidate
-                    onSubmit={handleSubmit}
-                    sx={{ mt: 5 }}
+                    sx={{
+                        height: '100%',
+                        boxShadow: 20,
+                        backgroundColor: 'white',
+                        display: 'flex',
+                        flex: 2,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontFamily: 'Inter',
+                    }}
                 >
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                autoComplete="username"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="new-password"
-                            />
-                        </Grid>
-                    </Grid>
-                    <RouterLink to="/portal">
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 5, mb: 3, p: 3 }}
+                    <img
+                        src={logo}
+                        style={{
+                            width: 200,
+                            border: '5px solid #465362',
+                            borderColor: '#465362',
+                            borderRadius: 5,
+                            paddingTop: 10,
+                            paddingBottom: 10,
+                        }}
+                    />
+                    <Box component='form' noValidate sx={{ mt: 5, width: 500 }}>
+                        <Grid
+                            container
+                            spacing={2}
+                            alignItems='center'
+                            justifyContent='center'
                         >
-                            <Typography component="h1" variant="h5">
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id='username'
+                                    label='Username'
+                                    name='username'
+                                    autoComplete='username'
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name='password'
+                                    label='Password'
+                                    type='password'
+                                    id='password'
+                                    autoComplete='password'
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+                            </Grid>
+                            {error && (
+                                <Typography sx={{ color: 'red' }}>
+                                    Error: {error}
+                                </Typography>
+                            )}
+                        </Grid>
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            sx={{ mt: 5, mb: 3, p: 2 }}
+                            onClick={() => handleSubmit()}
+                        >
+                            <Typography variant='h1' fontSize={24}>
                                 Login
                             </Typography>
                         </Button>
-                    </RouterLink>
-                    <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <RouterLink to="/">
-                                <Link color="primary">
-                                    <Typography component="h1" variant="body1">
-                                        Already have an account? Sign in
-                                    </Typography>
-                                </Link>
-                            </RouterLink>
-                        </Grid>
-                    </Grid>
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontFamily: 'Inter',
+                        p: 5,
+                    }}
+                >
+                    <Typography
+                        component='h1'
+                        color='#fff'
+                        fontWeight='bold'
+                        fontSize={32}
+                    >
+                        New to <span style={{ color: '#D17A22' }}>JibJab</span>?
+                    </Typography>
+                    <Typography
+                        component='body'
+                        sx={{ color: '#fff' }}
+                        fontSize={20}
+                        fontWeight='light'
+                        textAlign='center'
+                    >
+                        Join other young socialites on their journey to cleanse
+                        the internet of old socialites
+                    </Typography>
+                    <Button
+                        variant='secondary'
+                        sx={{
+                            mt: 5,
+                            p: 2,
+                            width: 300,
+                        }}
+                        onClick={() => nav('/signup')}
+                    >
+                        <Typography
+                            variant='h1'
+                            fontSize={24}
+                            color={'#D17A22'}
+                        >
+                            Sign up
+                        </Typography>
+                    </Button>
                 </Box>
             </Box>
         </ThemeProvider>
     );
-}
+};
