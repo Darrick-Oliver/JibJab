@@ -15,12 +15,6 @@ afterAll(async () => {
     console.log('MongDB disconnected');
 });
 
-test('Basic Test', () => {
-    const target = 30;
-    const result = 30;
-    expect(target).toBe(result);
-});
-
 test('userController - login', async () => {
     const email = 'asdf';
     const password = 'asdfasdfasdf';
