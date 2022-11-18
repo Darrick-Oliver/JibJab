@@ -1,8 +1,8 @@
 import {
+    Body,
     BodyParam,
     Get,
     HttpCode,
-    HttpError,
     JsonController,
     Post,
 } from 'routing-controllers';
@@ -10,7 +10,6 @@ import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import 'dotenv/config';
 
 @JsonController()
 export class UserController {
