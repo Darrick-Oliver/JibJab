@@ -14,10 +14,10 @@ import {
 import SendIcon from '@mui/icons-material/SendOutlined';
 import theme from './theme';
 import { AuthContext } from '../App';
-import { useNavigate } from 'react-router-dom';
-import { makeGetRequest, makePostRequest } from '../utils/requests';
+import { makePostRequest } from '../utils/requests';
 import { Header } from '../components/header';
 import { Post } from '../components/post';
+import { invalidUserChecker } from '../utils/checkErrors';
 
 const DEFAULT_RADIUS = 15;
 const RAD_CHANGE_DELAY = 0.5;
@@ -26,7 +26,7 @@ const MARK_END = 30;
 const MARK_STEP = 5;
 
 export const Portal = () => {
-    const [auth] = useContext(AuthContext);
+    const [auth, setAuth] = useContext(AuthContext);
     const [lat, setLat] = useState(null);
     const [lng, setLng] = useState(null);
     const [radius, setRadius] = useState(DEFAULT_RADIUS);
@@ -66,6 +66,12 @@ export const Portal = () => {
                 setMessages(sorted);
             })
             .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                }
                 console.error(err.errorMessage);
             });
     };
@@ -133,8 +139,12 @@ export const Portal = () => {
             setMessages([res.data, ...messages]);
             return;
         } catch (err) {
+            if (invalidUserChecker(err.errorMessage)) {
+                setAuth(null);
+                localStorage.removeItem('jwt');
+                nav('/');
+            }
             console.error(err.errorMessage);
-            throw err.errorMessage;
         }
     };
 
@@ -214,7 +224,7 @@ const Messages = ({ messages }) => {
                     return (
                         <Post
                             post={value}
-                            key={`comments-${value.username}-${index}`}
+                            key={`comments-${value.user.username}-${index}`}
                         />
                     );
                 })
@@ -241,7 +251,7 @@ const RadiusSlider = ({ onChange, value, marks }) => {
             flexDirection={'row'}
         >
             <Typography color={'#D17A22'} fontSize={18} sx={{ pr: 3 }}>
-                Range
+                Distance
             </Typography>
             <Slider
                 value={value}

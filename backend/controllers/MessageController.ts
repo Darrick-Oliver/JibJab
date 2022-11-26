@@ -28,7 +28,7 @@ export class MessageController {
         }
 
         const messageInfo: IMessage = {
-            username: user.username,
+            user: user._id,
             message: message,
             time: new Date(),
             location: {
@@ -42,7 +42,11 @@ export class MessageController {
             await m.save();
             return successMessage({
                 id: m._id,
-                username: m.username,
+                user: {
+                    username: user.username,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                },
                 time: m.time,
                 message: m.message,
             });
@@ -55,21 +59,6 @@ export class MessageController {
                 throw errorMessage('Unknown error');
             }
         }
-    }
-
-    @HttpCode(200)
-    @Get('/message/getAll')
-    async getAll(@CurrentUser() user: any) {
-        const messages = await Message.find({}).lean().select({
-            _id: 1,
-            username: 1,
-            message: 1,
-            time: 1,
-        });
-        if (!messages) {
-            throw errorMessage('No messages found');
-        }
-        return successMessage(messages);
     }
 
     @HttpCode(200)
@@ -90,12 +79,17 @@ export class MessageController {
                         type: 'Point',
                         coordinates: [longitude, latitude],
                     },
-                    $maxDistance: distance * 1609.344,
+                    $maxDistance: distance * 1609.344, // Convert to meters
                 },
             },
         })
+            .populate('user', { username: 1, first_name: 1, last_name: 1 })
             .lean()
-            .select('username message time');
+            .select({
+                user: 1,
+                message: 1,
+                time: 1,
+            });
         if (!messages) {
             throw errorMessage('No messages found');
         }

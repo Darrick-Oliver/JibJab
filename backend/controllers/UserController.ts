@@ -1,9 +1,11 @@
 import {
     BodyParam,
+    CurrentUser,
     Get,
     HttpCode,
     HttpError,
     JsonController,
+    Param,
     Post,
 } from 'routing-controllers';
 import User, { IUser } from '../models/User';
@@ -88,8 +90,25 @@ export class UserController {
             { username: user.username, email: user.email },
             process.env.JWT_SECRET as string
         );
-        const succMsg = successMessage({ access_token: token });
-        return succMsg;
+        return successMessage({ access_token: token });
+    }
+
+    @HttpCode(200)
+    @Get('/account/:username')
+    async accountGet(
+        @CurrentUser() currUser: any,
+        @Param('username') id: string
+    ) {
+        const user = await User.findOne({
+            username: { $regex: new RegExp(id, 'i') },
+        })
+            .lean()
+            .select('username first_name last_name joined');
+        if (!user) {
+            throw errorMessage('User does not exist');
+        }
+
+        return user;
     }
 }
 

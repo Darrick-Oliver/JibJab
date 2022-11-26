@@ -43,19 +43,6 @@ const theme = createTheme({
                 },
             ],
         },
-        MuiSlider: {
-            markLabel: {
-                color: 'red',
-                transform: 'none',
-                '&:last-child': {
-                    color: 'green',
-                    transform: 'translateX(-100%)',
-                },
-            },
-            markLabelActive: {
-                color: 'red',
-            },
-        },
     },
 });
 

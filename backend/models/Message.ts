@@ -1,15 +1,22 @@
 import { Schema, model } from 'mongoose';
+import { IUser } from './User';
 
 export interface IMessage {
-    username: string;
+    user: IUser;
     message: string;
     time: Date;
-    location: {};
+    location: ILoc;
+}
+
+interface ILoc {
+    type: 'Point';
+    coordinates: [number, number];
 }
 
 const MessageSchema: Schema = new Schema<IMessage>({
-    username: {
-        type: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
     },
     message: {
@@ -32,4 +39,4 @@ const MessageSchema: Schema = new Schema<IMessage>({
 });
 MessageSchema.index({ location: '2dsphere' });
 
-export default model<IMessage>('MessageSchema', MessageSchema);
+export default model<IMessage>('Message', MessageSchema);

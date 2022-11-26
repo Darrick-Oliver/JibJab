@@ -5,10 +5,11 @@ import { Box, Typography, Link } from '@mui/material';
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
-export const Post = ({ post, key }) => {
+export const Post = (props) => {
+    const post = props.post;
+
     return (
         <Box
-            key={key}
             backgroundColor={'#2B333D'}
             height={120}
             borderRadius={5}
@@ -22,14 +23,14 @@ export const Post = ({ post, key }) => {
             </Typography>
             <Typography color={'#fff'} fontSize={16}>
                 <Link
-                    href={`profile/${post.username}`}
+                    href={`profile/${post.user.username}`}
                     sx={{
                         textDecoration: 'none',
                         color: 'white',
                         fontWeight: 'bold',
                     }}
                 >
-                    {post.username}
+                    {post.user.first_name} {post.user.last_name}
                 </Link>{' '}
                 • {timeAgo.format(new Date(post.time))}
             </Typography>
