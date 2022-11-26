@@ -9,7 +9,7 @@ import {
     Container,
     ThemeProvider,
     Slider,
-    Link,
+    CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/SendOutlined';
 import theme from './theme';
@@ -20,7 +20,7 @@ import { Header } from '../components/header';
 import { Post } from '../components/post';
 
 const DEFAULT_RADIUS = 15;
-const RAD_CHANGE_DELAY = 1000;
+const RAD_CHANGE_DELAY = 0.5;
 const MARK_START = 5;
 const MARK_END = 30;
 const MARK_STEP = 5;
@@ -44,7 +44,10 @@ export const Portal = () => {
         });
     }
 
+    // Get messages in radius
     const getMessages = () => {
+        if (!lat || !lng) return;
+
         makePostRequest(
             '/api/message/get',
             {
@@ -67,7 +70,7 @@ export const Portal = () => {
             });
     };
 
-    // Grab location
+    // Grab location data from browser
     useEffect(() => {
         if (!navigator.geolocation) {
             console.error('Geolocation is not supported by your browser');
@@ -103,7 +106,7 @@ export const Portal = () => {
                 setMessages([]);
                 getMessages();
                 timeoutId.current = undefined;
-            }, RAD_CHANGE_DELAY);
+            }, RAD_CHANGE_DELAY * 1000);
             timeoutId.current = id;
         } else didMount.current = true;
     }, [radius]);
@@ -206,14 +209,20 @@ const MessageBox = ({ onPress }) => {
 const Messages = ({ messages }) => {
     return (
         <Box sx={{ mt: 15 }}>
-            {messages.map((value, index) => {
-                return (
-                    <Post
-                        post={value}
-                        key={`comments-${value.username}-${index}`}
-                    />
-                );
-            })}
+            {messages.length ? (
+                messages.map((value, index) => {
+                    return (
+                        <Post
+                            post={value}
+                            key={`comments-${value.username}-${index}`}
+                        />
+                    );
+                })
+            ) : (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress />
+                </div>
+            )}
         </Box>
     );
 };

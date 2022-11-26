@@ -22,13 +22,13 @@ const MessageSchema: Schema = new Schema<IMessage>({
         type: {
             type: String,
             enum: ['Point'],
-            required: true
+            required: true,
         },
         coordinates: {
             type: [Number],
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
 });
 MessageSchema.index({ location: '2dsphere' });
 

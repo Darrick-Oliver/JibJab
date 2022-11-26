@@ -33,9 +33,7 @@ export class MessageController {
             time: new Date(),
             location: {
                 type: 'Point',
-                coordinates: [
-                    longitude, latitude
-                ]
+                coordinates: [longitude, latitude],
             },
         };
 
@@ -82,7 +80,8 @@ export class MessageController {
         @BodyParam('longitude') longitude: number,
         @BodyParam('distance') distance: number
     ) {
-        if (!latitude || !longitude || !distance) throw errorMessage('Cannot include null values');
+        if (!latitude || !longitude || !distance)
+            throw errorMessage('Cannot include null values');
 
         const messages = await Message.find({
             location: {
@@ -94,7 +93,9 @@ export class MessageController {
                     $maxDistance: distance * 1609.344,
                 },
             },
-        }).lean().select('username message time');
+        })
+            .lean()
+            .select('username message time');
         if (!messages) {
             throw errorMessage('No messages found');
         }
