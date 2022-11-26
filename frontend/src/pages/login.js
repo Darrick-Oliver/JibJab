@@ -9,7 +9,7 @@ import {
     Typography,
     ThemeProvider,
 } from '@mui/material';
-import logo from './jibJabLogo.png';
+import logo from '../assets/jibJabLogo.png';
 import theme from './theme';
 import { AuthContext } from '../App';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +21,6 @@ export const Login = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const nav = useNavigate();
-
-    useEffect(() => {
-        if (auth) {
-            nav('/portal');
-        }
-    }, [auth]);
 
     const handleSubmit = async () => {
         try {

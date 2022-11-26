@@ -4,7 +4,7 @@ export interface IMessage {
     username: string;
     message: string;
     time: Date;
-    location: string;
+    location: {};
 }
 
 const MessageSchema: Schema = new Schema<IMessage>({
@@ -18,7 +18,18 @@ const MessageSchema: Schema = new Schema<IMessage>({
         maxLength: 281,
     },
     time: { type: Date, required: true },
-    location: { type: String },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    }
 });
+MessageSchema.index({ location: '2dsphere' });
 
 export default model<IMessage>('MessageSchema', MessageSchema);
