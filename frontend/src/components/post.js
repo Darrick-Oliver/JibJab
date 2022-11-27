@@ -11,7 +11,6 @@ export const Post = (props) => {
     return (
         <Box
             backgroundColor={'#2B333D'}
-            height={120}
             borderRadius={5}
             sx={{
                 p: 2,

@@ -106,6 +106,7 @@ export const Profile = () => {
                             style={{
                                 display: 'flex',
                                 flexDirection: 'row',
+                                alignItems: 'center',
                             }}
                         >
                             <Typography
@@ -114,6 +115,18 @@ export const Profile = () => {
                                 fontWeight={'bold'}
                             >
                                 {userInfo.first_name} {userInfo.last_name}
+                            </Typography>
+                            <div style={{ flex: 1 }} />
+                            <Typography color={'#fff'} fontSize={20}>
+                                Jabbin{"'"} since{' '}
+                                {new Date(userInfo.joined).toLocaleDateString(
+                                    undefined,
+                                    {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    }
+                                )}
                             </Typography>
                         </div>
 
@@ -184,6 +197,7 @@ export const Profile = () => {
                                         variant='contained'
                                         sx={{ mt: 2, p: 1, width: 80 }}
                                         onClick={handleBioSubmit}
+                                        disabled={bio.length > 240}
                                     >
                                         Submit
                                     </Button>

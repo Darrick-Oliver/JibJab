@@ -221,6 +221,7 @@ const MessageBox = ({ onPress }) => {
                         type='submit'
                         variant='contained'
                         sx={{ mt: 2, p: 1 }}
+                        disabled={message.length > 281}
                         onClick={async () => {
                             try {
                                 await onPress(message);
