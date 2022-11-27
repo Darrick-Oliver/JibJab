@@ -11,6 +11,7 @@ import {
     Slider,
     CircularProgress,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/SendOutlined';
 import theme from './theme';
 import { AuthContext } from '../App';
@@ -30,7 +31,8 @@ export const Portal = () => {
     const [lat, setLat] = useState(null);
     const [lng, setLng] = useState(null);
     const [radius, setRadius] = useState(DEFAULT_RADIUS);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(null);
+    const nav = useNavigate();
 
     const timeoutId = useRef();
     const didMount = useRef(false);
@@ -109,7 +111,7 @@ export const Portal = () => {
 
             // Wait before grabbing more messages
             const id = setTimeout(() => {
-                setMessages([]);
+                setMessages(null);
                 getMessages();
                 timeoutId.current = undefined;
             }, RAD_CHANGE_DELAY * 1000);
@@ -123,6 +125,8 @@ export const Portal = () => {
             // TODO: Error message
             if (!lat || !lng || !message) {
                 throw 'Null values';
+            } else if (message > 281) {
+                throw 'Message must be at most 281 characters';
             }
 
             const res = await makePostRequest(
@@ -144,7 +148,7 @@ export const Portal = () => {
                 localStorage.removeItem('jwt');
                 nav('/');
             }
-            console.error(err.errorMessage);
+            throw err.errorMessage;
         }
     };
 
@@ -181,6 +185,7 @@ const MessageBox = ({ onPress }) => {
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
+                        multiline
                         label="What's on your mind?"
                         variant='filled'
                         value={message}
@@ -191,7 +196,27 @@ const MessageBox = ({ onPress }) => {
                         }}
                     />
                 </Grid>
-                <Grid container item xs={12} justifyContent='flex-end'>
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    alignItems='center'
+                    justifyContent='flex-end'
+                >
+                    {message.length ? (
+                        <Typography
+                            color={
+                                message.length <= 281
+                                    ? '#fff'
+                                    : theme.palette.error.main
+                            }
+                            sx={{ mt: 2, p: 1 }}
+                        >
+                            {message.length}/281
+                        </Typography>
+                    ) : (
+                        <></>
+                    )}
                     <Button
                         type='submit'
                         variant='contained'
@@ -201,7 +226,7 @@ const MessageBox = ({ onPress }) => {
                                 await onPress(message);
                                 setMessage('');
                             } catch (err) {
-                                return;
+                                console.error(err);
                             }
                         }}
                     >
@@ -219,7 +244,7 @@ const MessageBox = ({ onPress }) => {
 const Messages = ({ messages }) => {
     return (
         <Box sx={{ mt: 15 }}>
-            {messages.length ? (
+            {messages ? (
                 messages.map((value, index) => {
                     return (
                         <Post

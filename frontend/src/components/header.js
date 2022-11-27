@@ -7,6 +7,7 @@ import LogoutIcon from '../assets/logout.svg';
 import LogoutClosedIcon from '../assets/logout_closed.svg';
 import ProfileIcon from '../assets/empty_profile.svg';
 import ProfileFilledIcon from '../assets/filled_profile.svg';
+import Home from '../assets/home.svg';
 
 export const Header = () => {
     const [hoverLogout, setHoverLogout] = useState(false);
@@ -24,8 +25,27 @@ export const Header = () => {
         nav(`/profile/${user.username}`);
     };
 
+    const handleHome = () => {
+        nav('/portal');
+    };
+
     return (
         <Grid container justifyContent='flex-end'>
+            <div
+                style={{
+                    paddingLeft: 10,
+                    paddingTop: 10,
+                    cursor: 'pointer',
+                }}
+                onClick={handleHome}
+            >
+                <img src={Home} alt='Home' />
+            </div>
+            <div
+                style={{
+                    flex: 1,
+                }}
+            />
             <div
                 onClick={handleProfile}
                 style={{

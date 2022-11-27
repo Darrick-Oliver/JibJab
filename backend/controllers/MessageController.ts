@@ -24,7 +24,7 @@ export class MessageController {
             throw errorMessage('Cannot include null values');
         }
         if (message.length > 281) {
-            throw errorMessage('Message must be less than 281 characters');
+            throw errorMessage('Message must be at most 281 characters');
         }
 
         const messageInfo: IMessage = {

@@ -103,12 +103,28 @@ export class UserController {
             username: { $regex: new RegExp(id, 'i') },
         })
             .lean()
-            .select('username first_name last_name joined');
+            .select('username first_name last_name joined bio');
         if (!user) {
             throw errorMessage('User does not exist');
         }
 
-        return user;
+        return successMessage(user);
+    }
+
+    @HttpCode(200)
+    @Post('/account/update/bio')
+    async updateBio(@CurrentUser() user: any, @BodyParam('bio') bio: string) {
+        if (bio.length > 240)
+            throw errorMessage('Bio cannot be longer than 240 characters');
+
+        await User.updateOne(
+            {
+                _id: user._id,
+            },
+            { bio: bio }
+        );
+
+        return successMessage();
     }
 }
 
