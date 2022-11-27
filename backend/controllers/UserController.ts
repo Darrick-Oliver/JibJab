@@ -95,10 +95,7 @@ export class UserController {
 
     @HttpCode(200)
     @Get('/account/:id')
-    async accountGet(
-        @CurrentUser() currUser: any,
-        @Param('id') id: string
-    ) {
+    async accountGet(@CurrentUser() currUser: any, @Param('id') id: string) {
         const user = await User.findOne({
             username: { $regex: new RegExp(id, 'i') },
         })
