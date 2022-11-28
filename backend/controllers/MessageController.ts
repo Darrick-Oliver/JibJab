@@ -24,14 +24,17 @@ export class MessageController {
             throw errorMessage('Cannot include null values');
         }
         if (message.length > 281) {
-            throw errorMessage('Message must be less than 281 characters');
+            throw errorMessage('Message must be at most 281 characters');
         }
 
         const messageInfo: IMessage = {
-            username: user.username,
+            user: user._id,
             message: message,
             time: new Date(),
-            location: `${latitude}, ${longitude}`,
+            location: {
+                type: 'Point',
+                coordinates: [longitude, latitude],
+            },
         };
 
         const m = new Message(messageInfo);
@@ -39,7 +42,11 @@ export class MessageController {
             await m.save();
             return successMessage({
                 id: m._id,
-                username: m.username,
+                user: {
+                    username: user.username,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                },
                 time: m.time,
                 message: m.message,
             });
@@ -55,16 +62,36 @@ export class MessageController {
     }
 
     @HttpCode(200)
-    @Get('/message/getAll')
-    async getAll(@CurrentUser() user: any) {
-        const messages = await Message.find({}).lean().select({
-            _id: 1,
-            username: 1,
-            message: 1,
-            time: 1,
-        });
+    @Post('/message/get')
+    async get(
+        @CurrentUser() user: any,
+        @BodyParam('latitude') latitude: number,
+        @BodyParam('longitude') longitude: number,
+        @BodyParam('distance') distance: number
+    ) {
+        if (!latitude || !longitude || !distance)
+            throw errorMessage('Cannot include null values');
+
+        const messages = await Message.find({
+            location: {
+                $near: {
+                    $geometry: {
+                        type: 'Point',
+                        coordinates: [longitude, latitude],
+                    },
+                    $maxDistance: distance * 1609.344, // Convert to meters
+                },
+            },
+        })
+            .populate('user', { username: 1, first_name: 1, last_name: 1 })
+            .lean()
+            .select({
+                user: 1,
+                message: 1,
+                time: 1,
+            });
         if (!messages) {
-            throw errorMessage('GetAll error');
+            throw errorMessage('No messages found');
         }
         return successMessage(messages);
     }

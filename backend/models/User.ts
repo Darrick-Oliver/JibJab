@@ -39,4 +39,4 @@ UserSchema.plugin(uniqueValidator, {
     message: 'Error, {PATH} must be unique.',
 });
 
-export default model<IUser>('UserSchema', UserSchema);
+export default model<IUser>('User', UserSchema);

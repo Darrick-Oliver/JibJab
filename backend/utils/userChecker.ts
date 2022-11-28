@@ -16,7 +16,7 @@ export const userChecker = async (action: Action) => {
 
         const user = await User.findOne({ username: username }).lean();
         if (!user) {
-            throw errorMessage('User not found');
+            throw errorMessage('Invalid user token');
         }
 
         return user;
