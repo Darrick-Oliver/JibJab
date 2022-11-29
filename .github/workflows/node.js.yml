@@ -22,6 +22,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
+      env:
+        PORT: ${{ secrets.PORT }}
+        MONGO_PWD: ${{ secrets.MONGO_PWD }}
+        MONGO_USER: ${{ secrets.MONGO_USER }}
+        MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
