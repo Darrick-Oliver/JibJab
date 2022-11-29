@@ -75,22 +75,22 @@ test('userController - register - fail - short password', async () => {
 });
 
 test('userController - register - fail - short username', async () => {
-    const username = 'jo';
-    const first_name = 'John';
-    const last_name = 'Travolta';
-    const email = 'helloFresh';
-    const password = 'thisPasswordWorks';
-    try {
-        const result = await uc.register(
-            username,
-            first_name,
-            last_name,
-            email,
-            password
-        );
-    } catch (err: any) {
-        expect(err.error).toBe(true);
-    }
+  const username = 'jo';
+  const first_name = 'John';
+  const last_name = 'Travolta';
+  const email = 'helloFresh';
+  const password = 'thisPasswordWorks';
+  try {
+      const result = await uc.register(
+          username,
+          first_name,
+          last_name,
+          email,
+          password
+      );
+  } catch (err: any) {
+      expect(err.error).toBe(true);
+  }
 });
 
 test('userController - register - success', async () => {
