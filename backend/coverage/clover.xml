@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668733593996" clover="3.2.0">
-  <project timestamp="1668733593997" name="All files">
-    <metrics statements="88" coveredstatements="62" conditionals="25" coveredconditionals="15" methods="13" coveredmethods="7" elements="126" coveredelements="84" complexity="0" loc="88" ncloc="88" packages="4" files="6" classes="6"/>
-    <package name="bootstrap">
-      <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
-      <file name="db_init.ts" path="C:\Users\lucab\OneDrive\Desktop\jibJab\JibJab\backend\bootstrap\db_init.ts">
-        <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
-        <line num="10" count="2" type="stmt"/>
-        <line num="13" count="2" type="stmt"/>
-        <line num="15" count="2" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-      </file>
-    </package>
+<coverage generated="1669754665735" clover="3.2.0">
+  <project timestamp="1669754665736" name="All files">
+    <metrics statements="78" coveredstatements="64" conditionals="25" coveredconditionals="15" methods="10" coveredmethods="9" elements="113" coveredelements="88" complexity="0" loc="78" ncloc="78" packages="3" files="5" classes="5"/>
     <package name="controllers">
-      <metrics statements="66" coveredstatements="41" conditionals="25" coveredconditionals="15" methods="8" coveredmethods="3"/>
+      <metrics statements="66" coveredstatements="52" conditionals="25" coveredconditionals="15" methods="8" coveredmethods="7"/>
       <file name="MessageController.ts" path="C:\Users\lucab\OneDrive\Desktop\jibJab\JibJab\backend\controllers\MessageController.ts">
         <metrics statements="26" coveredstatements="17" conditionals="10" coveredconditionals="5" methods="2" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -50,7 +34,7 @@
         <line num="69" count="0" type="stmt"/>
       </file>
       <file name="UserController.ts" path="C:\Users\lucab\OneDrive\Desktop\jibJab\JibJab\backend\controllers\UserController.ts">
-        <metrics statements="40" coveredstatements="24" conditionals="15" coveredconditionals="10" methods="6" coveredmethods="2"/>
+        <metrics statements="40" coveredstatements="35" conditionals="15" coveredconditionals="10" methods="6" coveredmethods="6"/>
         <line num="1" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
@@ -58,19 +42,19 @@
         <line num="12" count="1" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
         <line num="18" count="1" type="stmt"/>
-        <line num="25" count="3" type="cond" truecount="6" falsecount="0"/>
+        <line num="25" count="4" type="cond" truecount="6" falsecount="0"/>
         <line num="26" count="1" type="stmt"/>
-        <line num="28" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="28" count="3" type="cond" truecount="1" falsecount="0"/>
         <line num="29" count="1" type="stmt"/>
-        <line num="31" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="31" count="2" type="cond" truecount="1" falsecount="0"/>
         <line num="32" count="1" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="40" count="0" type="stmt"/>
-        <line num="50" count="0" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
         <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="58" count="0" type="stmt"/>
         <line num="59" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -87,10 +71,10 @@
         <line num="90" count="1" type="stmt"/>
         <line num="91" count="1" type="stmt"/>
         <line num="95" count="1" type="stmt"/>
-        <line num="96" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="98" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="99" count="0" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="1" type="cond" truecount="0" falsecount="1"/>
+        <line num="99" count="1" type="stmt"/>
       </file>
     </package>
     <package name="models">
@@ -115,7 +99,7 @@
       <file name="returns.ts" path="C:\Users\lucab\OneDrive\Desktop\jibJab\JibJab\backend\utils\returns.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="2" type="stmt"/>
-        <line num="2" count="1" type="stmt"/>
+        <line num="2" count="2" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
         <line num="10" count="6" type="stmt"/>
       </file>
