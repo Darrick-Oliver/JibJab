@@ -97,7 +97,7 @@ test('userController - register - fail - short username', async () => {
           password
       );
   } catch (err: any) {
-      expect(err.error).toBe(true);
+      expect(err.error).toBe(true); 
   }
 });
 
