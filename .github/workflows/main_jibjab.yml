@@ -31,8 +31,8 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: backend
-          path: ./backend
+          name: node-app
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: backend
+          name: node-app
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
