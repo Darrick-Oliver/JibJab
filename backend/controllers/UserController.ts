@@ -1,15 +1,18 @@
 import {
-    Body,
     BodyParam,
+    CurrentUser,
     Get,
     HttpCode,
+    HttpError,
     JsonController,
+    Param,
     Post,
 } from 'routing-controllers';
 import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import 'dotenv/config';
 
 @JsonController()
 export class UserController {
@@ -62,6 +65,63 @@ export class UserController {
                 throw errorMessage('Unknown error');
             }
         }
+    }
+
+    @HttpCode(200)
+    @Post('/account/login')
+    async login(
+        @BodyParam('email') email: string,
+        @BodyParam('password') password: string
+    ) {
+        // search for user on email in db
+        const user = await User.findOne({ email: email }).lean();
+        if (!user) {
+            throw errorMessage('Email or password is incorrect');
+        }
+
+        // comparing user inputted password to db stored (hashed) password
+        const access = await bcrypt.compare(password, user.password);
+        if (!access) {
+            throw errorMessage('Email or password is incorrect');
+        }
+
+        // return jwt
+        const token = sign(
+            { username: user.username, email: user.email },
+            process.env.JWT_SECRET as string
+        );
+        return successMessage({ access_token: token });
+    }
+
+    @HttpCode(200)
+    @Get('/account/:id')
+    async accountGet(@CurrentUser() currUser: any, @Param('id') id: string) {
+        const user = await User.findOne({
+            username: { $regex: new RegExp(id, 'i') },
+        })
+            .lean()
+            .select('username first_name last_name joined bio');
+        if (!user) {
+            throw errorMessage('User does not exist');
+        }
+
+        return successMessage(user);
+    }
+
+    @HttpCode(200)
+    @Post('/account/update/bio')
+    async updateBio(@CurrentUser() user: any, @BodyParam('bio') bio: string) {
+        if (bio.length > 240)
+            throw errorMessage('Bio cannot be longer than 240 characters');
+
+        await User.updateOne(
+            {
+                _id: user._id,
+            },
+            { bio: bio }
+        );
+
+        return successMessage();
     }
 }
 

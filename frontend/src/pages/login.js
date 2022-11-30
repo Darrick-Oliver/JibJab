@@ -9,7 +9,7 @@ import {
     Typography,
     ThemeProvider,
 } from '@mui/material';
-import logo from './jibJabLogo.png';
+import logo from '../assets/jibJabLogo.png';
 import theme from './theme';
 import { AuthContext } from '../App';
 import { useNavigate } from 'react-router-dom';
@@ -18,25 +18,18 @@ import { makePostRequest } from '../utils/requests';
 export const Login = () => {
     const [auth, setAuth] = useContext(AuthContext);
     const [error, setError] = useState();
-    const [username, setUsername] = useState();
+    const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const nav = useNavigate();
 
-    useEffect(() => {
-        if (auth) {
-            nav('/portal');
-        }
-    }, [auth]);
-
     const handleSubmit = async () => {
-        console.log(username, password);
         try {
             const res = await makePostRequest('/api/account/login', {
-                username: username,
+                email: email,
                 password: password,
             });
-            console.log(res.data.access_token);
             setAuth(res.data.access_token);
+            localStorage.setItem('jwt', res.data.access_token);
         } catch (err) {
             setError(err.errorMessage);
         }
@@ -87,13 +80,11 @@ export const Login = () => {
                                 <TextField
                                     required
                                     fullWidth
-                                    id='username'
-                                    label='Username'
-                                    name='username'
-                                    autoComplete='username'
-                                    onChange={(e) =>
-                                        setUsername(e.target.value)
-                                    }
+                                    id='email'
+                                    label='Email'
+                                    name='email'
+                                    autoComplete='email'
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -156,8 +147,9 @@ export const Login = () => {
                         fontWeight='light'
                         textAlign='center'
                     >
-                        Join other young socialites on their journey to cleanse
-                        the internet of old socialites
+                        Join now to build connections with other young
+                        socialites around you, and engage with others in a fun
+                        environment
                     </Typography>
                     <Button
                         variant='secondary'
