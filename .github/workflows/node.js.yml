@@ -3,6 +3,13 @@
 
 name: Node.js CI
 
+env:
+  PORT: ${{ secrets.PORT }}
+  MONGO_PWD: ${{ secrets.MONGO_PWD }}
+  MONGO_USER: ${{ secrets.MONGO_USER }}
+  MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
 on:
   push:
     branches: [ "integ" ]
