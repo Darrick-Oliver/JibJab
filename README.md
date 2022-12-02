@@ -8,9 +8,9 @@
 307 Project
 JibJab is a social media app created to allow users to communicate in their local geolocation. Users can make a profile, login to their account securely, see messages from other jabbers, adjust a distance slider, react to posts and much more. This app creates a community in your area allowing you to effectively communicate with your peers.
 
-## wiki:  https://github.com/Darrick-Oliver/JibJab/wiki
+### wiki:  https://github.com/Darrick-Oliver/JibJab/wiki
 
-## CI deployment: https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml
+### CI deployment: https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml
 
 ## UI Prototype
 
