@@ -22,7 +22,7 @@ export const Post = (props) => {
             </Typography>
             <Typography color={'#fff'} fontSize={16}>
                 <Link
-                    href={`profile/${post.user.username}`}
+                    href={`/profile/${post.user.username}`}
                     sx={{
                         textDecoration: 'none',
                         color: 'white',
