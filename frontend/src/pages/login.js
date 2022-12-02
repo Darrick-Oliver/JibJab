@@ -24,10 +24,13 @@ export const Login = () => {
 
     const handleSubmit = async () => {
         try {
-            const res = await makePostRequest('/api/account/login', {
-                email: email,
-                password: password,
-            });
+            const res = await makePostRequest(
+                'https://jibjab.azurewebsites.net/api/account/login',
+                {
+                    email: email,
+                    password: password,
+                }
+            );
             setAuth(res.data.access_token);
             localStorage.setItem('jwt', res.data.access_token);
         } catch (err) {

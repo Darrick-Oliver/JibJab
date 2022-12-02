@@ -29,7 +29,7 @@ export const Profile = () => {
 
     // Get user info
     const getUserInfo = () => {
-        makeGetRequest(`/api/account/${id}`, {
+        makeGetRequest(`https://jibjab.azurewebsites.net/api/account/${id}`, {
             accesstoken: auth,
         })
             .then((data) => {
@@ -56,7 +56,7 @@ export const Profile = () => {
         }
 
         makePostRequest(
-            '/api/account/update/bio',
+            'https://jibjab.azurewebsites.net/api/account/update/bio',
             { bio: bio },
             {
                 accesstoken: auth,

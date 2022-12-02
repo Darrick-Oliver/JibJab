@@ -130,7 +130,7 @@ export const Portal = () => {
             }
 
             const res = await makePostRequest(
-                '/api/message/create',
+                'https://jibjab.azurewebsites.net/api/message/create',
                 {
                     message: message,
                     latitude: lat,
