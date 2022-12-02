@@ -105,23 +105,23 @@ test('userController - register - fail - short username', async () => {
     }
 });
 
-test('userController - register - success', async () => {
-    const username = 'johnBoi';
-    const first_name = 'John';
-    const last_name = 'Travolta';
-    const email = 'helloFresh';
-    const password = 'thisPasswordWorks';
+// test('userController - register - success', async () => {
+//     const username = 'johnBoi';
+//     const first_name = 'John';
+//     const last_name = 'Travolta';
+//     const email = 'helloFresh';
+//     const password = 'thisPasswordWorks';
 
-    //register user
-    const result = await uc.register(
-        username,
-        first_name,
-        last_name,
-        email,
-        password
-    );
-    expect(result.error).toBe(false);
-});
+//     //register user
+//     const result = await uc.register(
+//         username,
+//         first_name,
+//         last_name,
+//         email,
+//         password
+//     );
+//     expect(result.error).toBe(false);
+// });
 
 test('userController - login fail', async () => {
     const email = 'failedEmail';

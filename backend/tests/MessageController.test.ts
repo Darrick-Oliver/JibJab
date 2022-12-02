@@ -55,36 +55,36 @@ afterAll(async () => {
     }
 });
 
-test('Test - Send Message - fail - null values', async () => {
-    const message = '';
-    const latitude = 0;
-    const longitude = 0;
-    let access_token = null;
+// test('Test - Send Message - fail - null values', async () => {
+//     const message = '';
+//     const latitude = 0;
+//     const longitude = 0;
+//     let access_token = null;
 
-    //get current user by login
-    const data = (await uc.login(EMAIL, PASSWORD))?.data;
-    if (data instanceof Object) {
-        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
-            access_token = data[key];
-        });
-    }
+//     //get current user by login
+//     const data = (await uc.login(EMAIL, PASSWORD))?.data;
+//     if (data instanceof Object) {
+//         (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+//             access_token = data[key];
+//         });
+//     }
 
-    if (!access_token) {
-        fail('no access_token for login');
-    }
+//     if (!access_token) {
+//         fail('no access_token for login');
+//     }
 
-    //create message
-    try {
-        const result = await mc.create(
-            message,
-            latitude,
-            longitude,
-            await currentUser(access_token)
-        );
-    } catch (err: any) {
-        expect(err.error).toBe(true);
-    }
-});
+//     //create message
+//     try {
+//         const result = await mc.create(
+//             message,
+//             latitude,
+//             longitude,
+//             await currentUser(access_token)
+//         );
+//     } catch (err: any) {
+//         expect(err.error).toBe(true);
+//     }
+// });
 
 test('Test - Send Message - fail - message length', async () => {
     const message =
