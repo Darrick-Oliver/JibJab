@@ -19,22 +19,19 @@ Figma(10/17): https://www.figma.com/file/YJzhS3b0bL3EnkYT3zyEEh/Young-Socialites
 ## Dev Environment Setup
 
 ### Clone Project
-	npm i
+```
+git clone https://github.com/Darrick-Oliver/JibJab.git
+```
 
-### Setting up ESLint:
-	npm init @eslint/config --save-dev
+### Installing all libraries (from main folder):
+```
+cd frontend && npm i && cd ..
+cd backend && npm i && cd ..
+```
 
-
-### Setting up Prettier:
-	npm i prettier --save-dev
-	npm i prettierrc --save-dev
-	npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
-
-#### add plugin:prettier/recommended to extends:
-    "plugin:prettier/recommended"
-
-#### Add this to package.json scripts:
-	"format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+### Setting up Prettier/ESLint:
+#### Add prettier plugin to VSCode (optional):
+https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 #### Command to run prettier format:
 	npm run format
