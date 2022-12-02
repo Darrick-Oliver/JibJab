@@ -309,6 +309,46 @@ const Messages = (props) => {
             });
     };
 
+    const handleDelete = async (message) => {
+        makePostRequest(
+            '/api/message/react',
+            {
+                reaction: reaction,
+                messageid: message._id,
+                increment: increment,
+            },
+            {
+                accesstoken: auth,
+            }
+        )
+            .then(() => {
+                // find msg by id, update msg state w reaction
+                for (let i = 0; i < messages.length; i++) {
+                    if (message._id == messages[i]._id) {
+                        message.numReactions[reaction] = String(
+                            increment
+                                ? Number(message.numReactions[reaction]) + 1
+                                : Number(message.numReactions[reaction]) - 1
+                        );
+                        message.reactions[reaction] = increment;
+                        break;
+                    }
+                }
+                setMessages([...messages]);
+            })
+            .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                } else {
+                    console.error(err.errorMessage);
+                }
+                setMessages([...messages]);
+            });
+    };
+
     return (
         <Box sx={{ mt: 15 }}>
             {messages ? (
