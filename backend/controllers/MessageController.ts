@@ -37,7 +37,7 @@ export class MessageController {
                 coordinates: [longitude, latitude],
             },
             reactions: [[], [], [], [], [], [], [], []],
-            numReactions: [0, 0, 0, 0, 0, 0, 0, 0]
+            numReactions: [1, 1, 1, 1, 1, 1, 1, 1],
         };
 
         const m = new Message(messageInfo);
@@ -52,7 +52,7 @@ export class MessageController {
                 },
                 time: m.time,
                 message: m.message,
-                numReactions: m.numReactions
+                numReactions: m.numReactions,
             });
         } catch (err) {
             if (typeof err === 'string') {
@@ -72,26 +72,30 @@ export class MessageController {
         @BodyParam('messageid') messageid: ObjectId,
         @BodyParam('reaction') reactionIndex: number
     ) {
-        if (!messageid || !reactionIndex)
+        if (!messageid || reactionIndex === undefined)
             throw errorMessage('Cannot include null values');
-        
-        const reactionArray = await Message.findById(messageid, 'reactions numReaction').lean()
-            if (!reactionArray)
-                throw errorMessage('Message not found');
 
-        if (!reactionArray.reactions[reactionIndex].includes(user)) {
-            reactionArray.reactions[reactionIndex].push(user)
-            reactionArray.numReactions[reactionIndex] = 
-                Number(reactionArray.numReactions[reactionIndex]) + 1
-        }
-        else
-            throw errorMessage('Repeat Reaction')
-        
+        const reactionArray = await Message.findById(
+            messageid,
+            'reactions numReactions'
+        ).lean();
+        if (!reactionArray) throw errorMessage('Message not found');
+
+        console.log('printing reactionarray numreactions');
+        console.log(reactionArray);
+        console.log(reactionArray.numReactions);
+
+        if (!reactionArray.reactions[reactionIndex].includes(user.username)) {
+            reactionArray.reactions[reactionIndex].push(user.username);
+            reactionArray.numReactions[reactionIndex] =
+                Number(reactionArray.numReactions[reactionIndex]) + 1;
+        } else throw errorMessage('Repeat Reaction');
+
         try {
-            await Message.findByIdAndUpdate(messageid, { 
+            await Message.findByIdAndUpdate(messageid, {
                 reactions: reactionArray.reactions,
-                numReactions: reactionArray.numReactions
-            })
+                numReactions: reactionArray.numReactions,
+            });
             return successMessage();
         } catch (err) {
             if (typeof err === 'string') {
@@ -115,7 +119,7 @@ export class MessageController {
         if (!latitude || !longitude || !distance)
             throw errorMessage('Cannot include null values');
 
-        const messages = await Message.find({
+        const messages: any = await Message.find({
             location: {
                 $near: {
                     $geometry: {
@@ -133,24 +137,27 @@ export class MessageController {
                 message: 1,
                 time: 1,
                 reactions: 1,
-                numReactions: 1
+                numReactions: 1,
             });
         if (!messages) {
             throw errorMessage('No messages found');
         }
-        const userReactionCheck: any[][] = [];
+        //const userReactionCheck: any[][] = [];
         for (let m = 0; m < messages.length; m++) {
-            let curr = [] as boolean[]
-            for (let i = 0; i < 7; i++) {
+            let curr = [] as boolean[];
+            for (let i = 0; i < 8; i++) {
+                //console.log(messages[m]);
                 if (messages[m].reactions[i].includes(user.username)) {
-                    curr.push(true)
-                }
-                else {
-                    curr.push(false)
+                    curr.push(true);
+                } else {
+                    curr.push(false);
                 }
             }
-            userReactionCheck.push(curr)
+            //delete messages[m].reactions;
+            messages[m].reactions = curr;
         }
-        return successMessage({ messages: messages, userReactionCheck: userReactionCheck });
+        //console.log('MESSAGES');
+        //console.log(messages);
+        return successMessage(messages);
     }
 }

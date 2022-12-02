@@ -62,10 +62,12 @@ export const Portal = () => {
             }
         )
             .then((res) => {
-                const sorted = res.data.messages.sort((a, b) => {
+                const sorted = res.data.sort((a, b) => {
                     return new Date(b.time) - new Date(a.time);
                 });
                 setMessages(sorted);
+                console.log('HERE CONSOLE LOG PRINT');
+                console.log(res.data);
             })
             .catch((err) => {
                 // Log user out if invalid token
@@ -243,6 +245,21 @@ const MessageBox = ({ onPress }) => {
 };
 
 const Messages = ({ messages }) => {
+    const [auth, setAuth] = useContext(AuthContext);
+
+    const handleReaction = async (message, reaction) => {
+        const res = await makePostRequest(
+            '/api/message/react',
+            {
+                reaction: reaction,
+                messageid: message._id,
+            },
+            {
+                accesstoken: auth,
+            }
+        );
+    };
+
     return (
         <Box sx={{ mt: 15 }}>
             {messages ? (
@@ -251,6 +268,7 @@ const Messages = ({ messages }) => {
                         <Post
                             post={value}
                             key={`comments-${value.user.username}-${index}`}
+                            reactCallback={handleReaction}
                         />
                     );
                 })

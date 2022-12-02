@@ -40,13 +40,12 @@ const MessageSchema: Schema = new Schema<IMessage>({
     },
     reactions: {
         type: [[String]],
-        required: true
+        required: true,
     },
     numReactions: {
         type: [Number],
-        required: true
-    }
-
+        required: true,
+    },
 });
 MessageSchema.index({ location: '2dsphere' });
 
