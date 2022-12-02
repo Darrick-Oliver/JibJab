@@ -148,6 +148,8 @@ export class UserController {
                 user: 1,
                 message: 1,
                 time: 1,
+                reactions: 1,
+                numReactions: 1,
             });
 
         return successMessage(messages);

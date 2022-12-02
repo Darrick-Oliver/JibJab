@@ -27,6 +27,7 @@ export const UserReaction = (props) => {
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 display: 'inline-flex',
+                cursor: 'pointer',
             }}
             onClick={() => callback(post, index, !post.reactions[index])}
         >

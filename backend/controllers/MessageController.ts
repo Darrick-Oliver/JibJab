@@ -181,7 +181,7 @@ export class MessageController {
         return successMessage(messages);
     }
 
-    @HttpCode(204)
+    @HttpCode(202)
     @Delete('/message/delete/:id')
     async delete(@CurrentUser() user: any, @Param('id') id: string) {
         if (!id) throw errorMessage('Cannot include null values');

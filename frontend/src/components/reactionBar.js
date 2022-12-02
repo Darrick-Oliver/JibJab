@@ -29,6 +29,7 @@ const reactionsEnum = {
 export const ReactionBar = (props) => {
     const [hoverAddReaction, setHoverAddReaction] = useState(false);
     const { callback, post, deleteCallback } = props;
+    const [auth, setAuth, user] = useContext(AuthContext);
 
     const arrayIcons = [
         FireIcon,
@@ -99,6 +100,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={FireIcon}
                         alt='Fire'
@@ -110,6 +112,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={SkullIcon}
                         alt='Skull'
@@ -123,6 +126,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={HeartIcon}
                         alt='Heart'
@@ -136,6 +140,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={ExclamationMarkIcon}
                         alt='ExclamationMark'
@@ -149,6 +154,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={ThumbsUpIcon}
                         alt='ThumbsUp'
@@ -162,6 +168,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={ThumbsDownIcon}
                         alt='ThumbsDown'
@@ -175,6 +182,7 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
+                            cursor: 'pointer',
                         }}
                         src={HappyFaceIcon}
                         alt='HappyFace'
@@ -188,6 +196,7 @@ export const ReactionBar = (props) => {
                         style={{
                             width: 20,
                             height: 20,
+                            cursor: 'pointer',
                         }}
                         src={LightBulbIcon}
                         alt='LightBulb'
@@ -226,23 +235,26 @@ export const ReactionBar = (props) => {
                     />
                 </Box>
             )}
-            <div
-                style={{
-                    width: 30,
-                    height: 30,
-                    marginLeft: 'auto',
-                }}
-                onClick={() => deleteCallback(post)}
-            >
-                <img
+            {user.username == post.user.username && (
+                <div
                     style={{
                         width: 30,
                         height: 30,
+                        marginLeft: 'auto',
+                        cursor: 'pointer',
                     }}
-                    src={TrashIcon}
-                    alt='Trash'
-                />
-            </div>
+                    onClick={() => deleteCallback(post)}
+                >
+                    <img
+                        style={{
+                            width: 30,
+                            height: 30,
+                        }}
+                        src={TrashIcon}
+                        alt='Trash'
+                    />
+                </div>
+            )}
         </div>
     );
 };

@@ -11,7 +11,11 @@ import {
 import theme from './theme';
 import { Header } from '../components/header';
 import { useEffect, useContext, useState } from 'react';
-import { makeGetRequest, makePostRequest } from '../utils/requests';
+import {
+    makeGetRequest,
+    makePostRequest,
+    makeDeleteRequest,
+} from '../utils/requests';
 import { AuthContext } from '../App';
 import { invalidUserChecker } from '../utils/checkErrors';
 import { Post } from '../components/post';
@@ -111,6 +115,91 @@ export const Profile = () => {
                 }
             });
     }, [userInfo]);
+
+    const handleReaction = async (message, reaction, increment) => {
+        if (
+            (message.reactions[reaction] == true && increment) ||
+            (message.reactions[reaction] == false && !increment)
+        )
+            return;
+
+        // Update before post
+        for (let i = 0; i < userMessages.length; i++) {
+            if (message._id == userMessages[i]._id) {
+                message.numReactions[reaction] = String(
+                    increment
+                        ? Number(message.numReactions[reaction]) + 1
+                        : Number(message.numReactions[reaction]) - 1
+                );
+                message.reactions[reaction] = increment;
+                break;
+            }
+        }
+        setUserMessages([...userMessages]);
+
+        makePostRequest(
+            '/api/message/react',
+            {
+                reaction: reaction,
+                messageid: message._id,
+                increment: increment,
+            },
+            {
+                accesstoken: auth,
+            }
+        )
+            .then(() => {
+                return;
+            })
+            .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                } else {
+                    console.error(err.errorMessage);
+                }
+
+                // Undo previous update on error
+                for (let i = 0; i < userMessages.length; i++) {
+                    if (message._id == userMessages[i]._id) {
+                        message.numReactions[reaction] = String(
+                            increment
+                                ? Number(message.numReactions[reaction]) - 1
+                                : Number(message.numReactions[reaction]) + 1
+                        );
+                        message.reactions[reaction] = !increment;
+                        break;
+                    }
+                }
+                setUserMessages([...userMessages]);
+            });
+    };
+
+    const handleDelete = async (message) => {
+        makeDeleteRequest(`/api/message/delete/${message._id}`, {
+            accesstoken: auth,
+        })
+            .then(() => {
+                for (let i = 0; i < userMessages.length; i++) {
+                    if (message._id == userMessages[i]._id) {
+                        userMessages.splice(i, 1);
+                    }
+                }
+                setUserMessages([...userMessages]);
+            })
+            .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                } else {
+                    console.error(err.errorMessage);
+                }
+            });
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -233,10 +322,13 @@ export const Profile = () => {
                         {userMessages ? (
                             <Box sx={{ mt: 15 }}>
                                 {userMessages.map((value, index) => {
+                                    console.log(value);
                                     return (
                                         <Post
                                             post={value}
                                             key={`comments-${value.user.username}-${index}`}
+                                            reactCallback={handleReaction}
+                                            deleteCallback={handleDelete}
                                         />
                                     );
                                 })}
