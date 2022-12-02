@@ -10,6 +10,8 @@ JibJab is a social media app created to allow users to communicate in their loca
 
 ## wiki:  https://github.com/Darrick-Oliver/JibJab/wiki
 
+## CI deployment: https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml
+
 ## UI Prototype
 
 Figma(10/17): https://www.figma.com/file/YJzhS3b0bL3EnkYT3zyEEh/Young-Socialites?node-id=0%3A1&t=O7XmaNbuMUJaYVU8-0
