@@ -12,6 +12,7 @@ import User, { IUser } from '../models/User';
 import { successMessage, errorMessage } from '../utils/returns';
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import Message from '../models/Message';
 
 @JsonController()
 export class UserController {
@@ -121,6 +122,35 @@ export class UserController {
         );
 
         return successMessage();
+    }
+
+    @HttpCode(200)
+    @Get('/account/messages/:id')
+    async getUserMessages(
+        @CurrentUser() currUser: any,
+        @Param('id') id: string
+    ) {
+        const user = await User.findOne({
+            username: { $regex: new RegExp(id, 'i') },
+        })
+            .lean()
+            .select('username first_name last_name joined bio');
+        if (!user) {
+            throw errorMessage('User does not exist');
+        }
+
+        const messages = await Message.find({
+            user: user._id,
+        })
+            .populate('user', { username: 1, first_name: 1, last_name: 1 })
+            .lean()
+            .select({
+                user: 1,
+                message: 1,
+                time: 1,
+            });
+
+        return successMessage(messages);
     }
 }
 
