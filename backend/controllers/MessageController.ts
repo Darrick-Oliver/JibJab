@@ -71,9 +71,13 @@ export class MessageController {
         @CurrentUser() user: any,
         @BodyParam('messageid') messageid: ObjectId,
         @BodyParam('reaction') reactionIndex: number,
-        @BodyParam('increment') increment: boolean,
+        @BodyParam('increment') increment: boolean
     ) {
-        if (!messageid || reactionIndex === undefined || increment === undefined)
+        if (
+            !messageid ||
+            reactionIndex === undefined ||
+            increment === undefined
+        )
             throw errorMessage('Cannot include null values');
 
         const reactionArray = await Message.findById(
@@ -82,21 +86,28 @@ export class MessageController {
         ).lean();
         if (!reactionArray) throw errorMessage('Message not found');
 
-        if (increment){
-            if (!reactionArray.reactions[reactionIndex].includes(user.username)) {
+        if (increment) {
+            if (
+                !reactionArray.reactions[reactionIndex].includes(user.username)
+            ) {
                 reactionArray.reactions[reactionIndex].push(user.username);
                 reactionArray.numReactions[reactionIndex] =
                     Number(reactionArray.numReactions[reactionIndex]) + 1;
             } else throw errorMessage('Repeat Reaction');
-        }
-        else{ //decrement
-            if (reactionArray.reactions[reactionIndex].includes(user.username)) {
-                const idx = reactionArray.reactions[reactionIndex].indexOf(user.username);
+        } else {
+            //decrement
+            if (
+                reactionArray.reactions[reactionIndex].includes(user.username)
+            ) {
+                const idx = reactionArray.reactions[reactionIndex].indexOf(
+                    user.username
+                );
                 reactionArray.reactions[reactionIndex].splice(idx, 1);
                 //removeItem(user.username, reactionArray.reactions[reactionIndex]);
                 reactionArray.numReactions[reactionIndex] =
                     Number(reactionArray.numReactions[reactionIndex]) - 1;
-            } else throw errorMessage('You have not reacted with this reaction');
+            } else
+                throw errorMessage('You have not reacted with this reaction');
         }
 
         try {
