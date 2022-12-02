@@ -19,8 +19,7 @@ Figma(10/17): https://www.figma.com/file/YJzhS3b0bL3EnkYT3zyEEh/Young-Socialites
 ## Dev Environment Setup
 
 ### Clone Project
-
-### npm i
+	npm i
 
 ### Setting up ESLint:
 	npm init @eslint/config --save-dev
