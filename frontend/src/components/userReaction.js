@@ -1,15 +1,24 @@
 import { Box, Typography, Link } from '@mui/material';
 import './reactionBar.css';
+import { reactionsEnum, arrayIcons, arrayIconNames } from './reactionBar.js';
 
 export const UserReaction = (props) => {
     const src = props.src;
     const name = props.name;
     const num = props.num;
+    const index = props.index;
+
+    const callback = props.callback;
+    const post = props.post;
+
+    // how to tell which one got pressed??
+    // onClick={() => callback(post, reactionsEnum.reactionsEnum???)}
 
     return (
         // make outside the mui div, put box with the addreactionicon in the conditional w the icon part
         <Box
-            backgroundColor={'#242424'}
+            backgroundColor={post.reactions[index] ? '#373737' : '#242424'}
+            border={post.reactions[index] && '1px solid #D17A22'}
             borderRadius={2}
             sx={{
                 p: 1,
@@ -20,6 +29,7 @@ export const UserReaction = (props) => {
                 alignItems: 'center',
                 display: 'inline-flex',
             }}
+            onClick={() => callback(post, index, !post.reactions[index])}
         >
             <img
                 style={{

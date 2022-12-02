@@ -94,6 +94,9 @@ export const ReactionBar = (props) => {
                             src={arrayIcons[index]}
                             name={arrayIconNames[index]}
                             num={value}
+                            index={index}
+                            post={post}
+                            callback={callback}
                         />
                     )
                 );
@@ -129,7 +132,7 @@ export const ReactionBar = (props) => {
                         alt='Fire'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.FIRE)}
+                        onClick={() => callback(post, reactionsEnum.FIRE, true)}
                     />
                     <img
                         style={{
@@ -142,7 +145,9 @@ export const ReactionBar = (props) => {
                         alt='Skull'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.SKULL)}
+                        onClick={() =>
+                            callback(post, reactionsEnum.SKULL, true)
+                        }
                     />
                     <img
                         style={{
@@ -155,7 +160,9 @@ export const ReactionBar = (props) => {
                         alt='Heart'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.HEART)}
+                        onClick={() =>
+                            callback(post, reactionsEnum.HEART, true)
+                        }
                     />
                     <img
                         style={{
@@ -171,7 +178,7 @@ export const ReactionBar = (props) => {
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
-                            callback(post, reactionsEnum.EXCLAMATION_MARK)
+                            callback(post, reactionsEnum.EXCLAMATION_MARK, true)
                         }
                     />
                     <img
@@ -185,7 +192,9 @@ export const ReactionBar = (props) => {
                         alt='ThumbsUp'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.THUMBS_UP)}
+                        onClick={() =>
+                            callback(post, reactionsEnum.THUMBS_UP, true)
+                        }
                     />
                     <img
                         style={{
@@ -199,7 +208,7 @@ export const ReactionBar = (props) => {
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
-                            callback(post, reactionsEnum.THUMBS_DOWN)
+                            callback(post, reactionsEnum.THUMBS_DOWN, true)
                         }
                     />
                     <img
@@ -213,7 +222,9 @@ export const ReactionBar = (props) => {
                         alt='HappyFace'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.HAPPY_FACE)}
+                        onClick={() =>
+                            callback(post, reactionsEnum.HAPPY_FACE, true)
+                        }
                     />
 
                     <img
@@ -228,7 +239,9 @@ export const ReactionBar = (props) => {
                         alt='LightBulb'
                         className='iconLoad'
                         //className={clickReaction ? 'loadup' : 'icon'}
-                        onClick={() => callback(post, reactionsEnum.LIGHT_BULB)}
+                        onClick={() =>
+                            callback(post, reactionsEnum.LIGHT_BULB, true)
+                        }
                     />
                 </Box>
             ) : (
