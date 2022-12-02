@@ -1,6 +1,6 @@
 # JibJab
 
-![Backend Node.js Workflow] (https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml?branch=integ)
+[![Backend Node.js Workflow] (https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml?branch=integ)] (https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml)
 
 
 307 Project
