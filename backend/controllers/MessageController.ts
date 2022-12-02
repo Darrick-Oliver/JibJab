@@ -90,9 +90,7 @@ export class MessageController {
                 message: 1,
                 time: 1,
             });
-        if (!messages) {
-            throw errorMessage('No messages found');
-        }
+
         return successMessage(messages);
     }
 }

@@ -129,8 +129,8 @@ test('Test - Send Message - fail - message length', async () => {
 
 test('Test - Send Message - success', async () => {
     const message = 'Hello';
-    const latitude = 50;
-    const longitude = 100;
+    const latitude = 51;
+    const longitude = 16;
     let access_token = null;
 
     //get current user by login
@@ -154,4 +154,101 @@ test('Test - Send Message - success', async () => {
     );
 
     expect(result.error).toBe(false);
+});
+
+test('Test - get message - success', async () => {
+    const message = 'Hello';
+    const latitude = 51;
+    const longitude = 16;
+    const distance = 5;
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(EMAIL, PASSWORD))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //get message
+    const result = await mc.get(
+        await currentUser(access_token),
+        latitude,
+        longitude,
+        distance
+    );
+
+    expect(result.data).not.toEqual([]);
+    expect(result.data).not.toEqual({});
+    expect(result.data).not.toBe(undefined);
+    expect(result.error).toBe(false);
+});
+
+test('Test - get message - failure - null fields', async () => {
+    const message = 'Hello';
+    const latitude = 51;
+    const longitude = 80;
+    const distance = 0;
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(EMAIL, PASSWORD))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //get message
+    try {
+        const result = await mc.get(
+            await currentUser(access_token),
+            latitude,
+            longitude,
+            distance
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+});
+
+test('Test - get message - failure - no messages', async () => {
+    const message = 'Hello';
+    const latitude = 2;
+    const longitude = 3;
+    const distance = 1;
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(EMAIL, PASSWORD))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //get message
+    try {
+        const result = await mc.get(
+            await currentUser(access_token),
+            latitude,
+            longitude,
+            distance
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
 });
