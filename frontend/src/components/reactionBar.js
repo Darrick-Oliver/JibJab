@@ -13,6 +13,7 @@ import LightBulbIcon from '../assets/light_bulb.svg';
 import SkullIcon from '../assets/skull.svg';
 import ThumbsDownIcon from '../assets/thumbs_down.svg';
 import ThumbsUpIcon from '../assets/thumbs_up.svg';
+import TrashIcon from '../assets/trash.svg';
 
 const reactionsEnum = {
     FIRE: 0,
@@ -27,11 +28,7 @@ const reactionsEnum = {
 
 export const ReactionBar = (props) => {
     const [hoverAddReaction, setHoverAddReaction] = useState(false);
-    const [clickReaction, setClickReaction] = useState(false);
-    const [auth, setAuth] = useContext(AuthContext);
-
-    const callback = props.callback;
-    const post = props.post;
+    const { callback, post, deleteCallback } = props;
 
     const arrayIcons = [
         FireIcon,
@@ -55,27 +52,6 @@ export const ReactionBar = (props) => {
         'LightBulb',
     ];
 
-    // const handleReaction = () => {
-    //     setClickReaction((current) => !current);
-    // };
-
-    // callback in portal.js, number of the reaction selected
-    // const handleReaction = async (message, reaction) => {
-    //     const res = await makePostRequest(
-    //         '/api/message/react',
-    //         {
-    //             reaction: reaction,
-    //             messageid: message._id,
-    //         },
-    //         {
-    //             accesstoken: auth,
-    //         }
-    //     );
-    // };
-
-    // {/* map w/ get req */}
-    // <UserReaction src={FireIcon} name={'Fire'} num={2134} />
-
     console.log(post.numReactions);
 
     return (
@@ -84,6 +60,7 @@ export const ReactionBar = (props) => {
             style={{
                 display: 'flex',
                 flexDirection: 'row',
+                alignItems: 'center',
             }}
         >
             {post.numReactions.map((value, index) => {
@@ -106,8 +83,6 @@ export const ReactionBar = (props) => {
                     backgroundColor={'#242424'}
                     borderRadius={3}
                     sx={{
-                        //p: 1,
-                        //px: 1,
                         my: 1,
                         height: 30,
                         width: 240,
@@ -126,12 +101,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={FireIcon}
                         alt='Fire'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() => callback(post, reactionsEnum.FIRE, true)}
                     />
                     <img
@@ -139,12 +112,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={SkullIcon}
                         alt='Skull'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.SKULL, true)
                         }
@@ -154,12 +125,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={HeartIcon}
                         alt='Heart'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.HEART, true)
                         }
@@ -169,14 +138,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            // animationName: expand,
-                            // highlighted,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={ExclamationMarkIcon}
                         alt='ExclamationMark'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.EXCLAMATION_MARK, true)
                         }
@@ -186,12 +151,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={ThumbsUpIcon}
                         alt='ThumbsUp'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.THUMBS_UP, true)
                         }
@@ -201,12 +164,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={ThumbsDownIcon}
                         alt='ThumbsDown'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.THUMBS_DOWN, true)
                         }
@@ -216,12 +177,10 @@ export const ReactionBar = (props) => {
                             width: 20,
                             height: 20,
                             marginRight: 8,
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
                         }}
                         src={HappyFaceIcon}
                         alt='HappyFace'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.HAPPY_FACE, true)
                         }
@@ -231,14 +190,10 @@ export const ReactionBar = (props) => {
                         style={{
                             width: 20,
                             height: 20,
-                            //margin: '0px 4px',
-                            //backgroundColor: clickReaction ? '#b3cde0' : '',
-                            //animation
                         }}
                         src={LightBulbIcon}
                         alt='LightBulb'
                         className='iconLoad'
-                        //className={clickReaction ? 'loadup' : 'icon'}
                         onClick={() =>
                             callback(post, reactionsEnum.LIGHT_BULB, true)
                         }
@@ -275,6 +230,23 @@ export const ReactionBar = (props) => {
                     />
                 </Box>
             )}
+            <div
+                style={{
+                    width: 30,
+                    height: 30,
+                    marginLeft: 'auto',
+                }}
+                onClick={() => deleteCallback(post)}
+            >
+                <img
+                    style={{
+                        width: 30,
+                        height: 30,
+                    }}
+                    src={TrashIcon}
+                    alt='Trash'
+                />
+            </div>
         </div>
     );
 };

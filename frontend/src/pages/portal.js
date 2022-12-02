@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/SendOutlined';
 import theme from './theme';
 import { AuthContext } from '../App';
-import { makePostRequest } from '../utils/requests';
+import { makePostRequest, makeDeleteRequest } from '../utils/requests';
 import { Header } from '../components/header';
 import { Post } from '../components/post';
 import { invalidUserChecker } from '../utils/checkErrors';
@@ -310,28 +310,13 @@ const Messages = (props) => {
     };
 
     const handleDelete = async (message) => {
-        makePostRequest(
-            '/api/message/react',
-            {
-                reaction: reaction,
-                messageid: message._id,
-                increment: increment,
-            },
-            {
-                accesstoken: auth,
-            }
-        )
+        makeDeleteRequest(`/api/message/delete/${message._id}`, {
+            accesstoken: auth,
+        })
             .then(() => {
-                // find msg by id, update msg state w reaction
                 for (let i = 0; i < messages.length; i++) {
                     if (message._id == messages[i]._id) {
-                        message.numReactions[reaction] = String(
-                            increment
-                                ? Number(message.numReactions[reaction]) + 1
-                                : Number(message.numReactions[reaction]) - 1
-                        );
-                        message.reactions[reaction] = increment;
-                        break;
+                        messages.splice(i, 1);
                     }
                 }
                 setMessages([...messages]);
@@ -345,7 +330,6 @@ const Messages = (props) => {
                 } else {
                     console.error(err.errorMessage);
                 }
-                setMessages([...messages]);
             });
     };
 
@@ -358,6 +342,7 @@ const Messages = (props) => {
                             post={value}
                             key={`comments-${value.user.username}-${index}`}
                             reactCallback={handleReaction}
+                            deleteCallback={handleDelete}
                         />
                     );
                 })

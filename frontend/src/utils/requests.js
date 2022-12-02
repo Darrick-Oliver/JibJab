@@ -65,7 +65,7 @@ export const makeGetRequest = (url, headers) => {
     });
 };
 
-export const makeDeleteRequest = (url, body, headers) => {
+export const makeDeleteRequest = (url, headers) => {
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'DELETE',
@@ -73,7 +73,6 @@ export const makeDeleteRequest = (url, body, headers) => {
                 'Content-Type': 'application/json',
                 ...headers,
             },
-            body: JSON.stringify(body),
         })
             .then((res) => res.json())
             .then((res) => {
