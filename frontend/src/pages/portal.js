@@ -51,7 +51,7 @@ export const Portal = () => {
         if (!lat || !lng) return;
 
         makePostRequest(
-            '/api/message/get',
+            'https://jibjab.azurewebsites.net/api/message/get',
             {
                 latitude: lat,
                 longitude: lng,
