@@ -1,5 +1,5 @@
 # JibJab
-307 Project
+307 Project 
 
 
 ## Setting up ESLint:
