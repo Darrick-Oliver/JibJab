@@ -158,7 +158,7 @@ export class MessageController {
                 reactions: 1,
                 numReactions: 1,
             });
-           
+
         if (!messages) {
             throw errorMessage('No messages found');
         }
@@ -178,7 +178,7 @@ export class MessageController {
         }
         //console.log('MESSAGES');
         //console.log(messages);
-        
+
         return successMessage(messages);
     }
 }
