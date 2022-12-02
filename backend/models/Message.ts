@@ -6,6 +6,7 @@ export interface IMessage {
     message: string;
     time: Date;
     location: ILoc;
+    reactions: Array<Array<String>>;
 }
 
 interface ILoc {
@@ -36,6 +37,10 @@ const MessageSchema: Schema = new Schema<IMessage>({
             required: true,
         },
     },
+    reactions: {
+        type: [[String]],
+        require: true
+    }
 });
 MessageSchema.index({ location: '2dsphere' });
 

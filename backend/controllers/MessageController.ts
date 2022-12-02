@@ -9,6 +9,7 @@ import Message, { IMessage } from '../models/Message';
 import { successMessage, errorMessage } from '../utils/returns';
 import 'dotenv/config';
 import { CurrentUser } from 'routing-controllers';
+import { ObjectId } from 'mongodb';
 
 @JsonController()
 export class MessageController {
@@ -35,6 +36,7 @@ export class MessageController {
                 type: 'Point',
                 coordinates: [longitude, latitude],
             },
+            reactions: [[], [], [], [], [], [], [], []]
         };
 
         const m = new Message(messageInfo);
@@ -49,7 +51,39 @@ export class MessageController {
                 },
                 time: m.time,
                 message: m.message,
+                reactions: [0, 0, 0, 0, 0, 0, 0, 0]
             });
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw errorMessage(err);
+            } else if (err instanceof Error) {
+                throw errorMessage(err.message);
+            } else {
+                throw errorMessage('Unknown error');
+            }
+        }
+    }
+
+    @HttpCode(201)
+    @Post('/message/react')
+    async react(
+        @CurrentUser() user: any,
+        @BodyParam('messageid') messageid: ObjectId,
+        @BodyParam('reaction') reactionIndex: number
+    ) {
+        if (!messageid || !reactionIndex)
+            throw errorMessage('Cannot include null values');
+        
+        const reactionArray = await Message.findById(messageid, 'reactions').lean()
+            if (!reactionArray)
+                throw errorMessage('Message not found');
+
+        if (!reactionArray.reactions[reactionIndex].includes(user))
+            reactionArray.reactions[reactionIndex].push(user)
+        
+        try {
+            await Message.findByIdAndUpdate(messageid, { reactions: reactionArray.reactions })
+            return successMessage();
         } catch (err) {
             if (typeof err === 'string') {
                 throw errorMessage(err);
@@ -89,6 +123,7 @@ export class MessageController {
                 user: 1,
                 message: 1,
                 time: 1,
+                reactions: 1
             });
         if (!messages) {
             throw errorMessage('No messages found');
