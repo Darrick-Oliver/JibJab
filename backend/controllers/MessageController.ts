@@ -1,8 +1,10 @@
 import {
     BodyParam,
+    Delete,
     Get,
     HttpCode,
     JsonController,
+    Param,
     Post,
 } from 'routing-controllers';
 import Message, { IMessage } from '../models/Message';
@@ -44,7 +46,7 @@ export class MessageController {
         try {
             await m.save();
             return successMessage({
-                id: m._id,
+                _id: m._id,
                 user: {
                     username: user.username,
                     first_name: user.first_name,
@@ -52,6 +54,7 @@ export class MessageController {
                 },
                 time: m.time,
                 message: m.message,
+                reactions: m.reactions,
                 numReactions: m.numReactions,
             });
         } catch (err) {
@@ -80,7 +83,7 @@ export class MessageController {
         )
             throw errorMessage('Cannot include null values');
 
-        const reactionArray = await Message.findById(
+        const reactionArray: any = await Message.findById(
             messageid,
             'reactions numReactions'
         ).lean();
@@ -103,7 +106,6 @@ export class MessageController {
                     user.username
                 );
                 reactionArray.reactions[reactionIndex].splice(idx, 1);
-                //removeItem(user.username, reactionArray.reactions[reactionIndex]);
                 reactionArray.numReactions[reactionIndex] =
                     Number(reactionArray.numReactions[reactionIndex]) - 1;
             } else
@@ -166,7 +168,6 @@ export class MessageController {
         for (let m = 0; m < messages.length; m++) {
             let curr = [] as boolean[];
             for (let i = 0; i < 8; i++) {
-                //console.log(messages[m]);
                 if (messages[m].reactions[i].includes(user.username)) {
                     curr.push(true);
                 } else {
@@ -176,9 +177,29 @@ export class MessageController {
             //delete messages[m].reactions;
             messages[m].reactions = curr;
         }
-        //console.log('MESSAGES');
-        //console.log(messages);
 
         return successMessage(messages);
+    }
+
+    @HttpCode(204)
+    @Delete('/message/delete/:id')
+    async delete(@CurrentUser() user: any, @Param('id') id: string) {
+        if (!id) throw errorMessage('Cannot include null values');
+
+        const message = await Message.findById(id).lean().select({
+            user: 1,
+            message: 1,
+            time: 1,
+            reactions: 1,
+            numReactions: 1,
+        });
+        if (!message) throw errorMessage("Message doesn't exist");
+        if (message.user.toString() !== user._id.toString())
+            throw errorMessage("You cannot delete other people's jabs");
+
+        const res = await Message.findByIdAndDelete(id);
+
+        if (res) return successMessage();
+        else throw errorMessage('Unexpected error deleting message');
     }
 }

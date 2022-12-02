@@ -66,8 +66,6 @@ export const Portal = () => {
                     return new Date(b.time) - new Date(a.time);
                 });
                 setMessages(sorted);
-                console.log('HERE CONSOLE LOG PRINT');
-                console.log(res.data);
             })
             .catch((err) => {
                 // Log user out if invalid token
@@ -250,17 +248,27 @@ const Messages = (props) => {
     const nav = useNavigate();
 
     const handleReaction = async (message, reaction, increment) => {
-        // update before post and error check
-        // for (let i = 0; i < messages.length; i++) {
-        //     if (message._id == messages[i]._id) {
-        //         message.numReactions[reaction] = String(
-        //             Number(message.numReactions[reaction]) + 1
-        //         );
-        //         message.reactions[reaction] = true;
-        //         break;
-        //     }
-        // }
-        //setMessages([...messages]);
+        // Error check
+        if (
+            (message.reactions[reaction] == true && increment) ||
+            (message.reactions[reaction] == false && !increment)
+        )
+            return;
+
+        // Update before post
+        for (let i = 0; i < messages.length; i++) {
+            if (message._id == messages[i]._id) {
+                message.numReactions[reaction] = String(
+                    increment
+                        ? Number(message.numReactions[reaction]) + 1
+                        : Number(message.numReactions[reaction]) - 1
+                );
+                message.reactions[reaction] = increment;
+                break;
+            }
+        }
+        setMessages([...messages]);
+
         makePostRequest(
             '/api/message/react',
             {
@@ -273,19 +281,7 @@ const Messages = (props) => {
             }
         )
             .then(() => {
-                // find msg by id, update msg state w reaction
-                for (let i = 0; i < messages.length; i++) {
-                    if (message._id == messages[i]._id) {
-                        message.numReactions[reaction] = String(
-                            increment
-                                ? Number(message.numReactions[reaction]) + 1
-                                : Number(message.numReactions[reaction]) - 1
-                        );
-                        message.reactions[reaction] = increment;
-                        break;
-                    }
-                }
-                setMessages([...messages]);
+                return;
             })
             .catch((err) => {
                 // Log user out if invalid token
@@ -296,15 +292,19 @@ const Messages = (props) => {
                 } else {
                     console.error(err.errorMessage);
                 }
-                // for (let i = 0; i < messages.length; i++) {
-                //     if (message._id == messages[i]._id) {
-                //         message.numReactions[reaction] = String(
-                //             Number(message.numReactions[reaction]) - 1
-                //         );
-                //         message.reactions[reaction] = false;
-                //         break;
-                //     }
-                // }
+
+                // Undo previous update on error
+                for (let i = 0; i < messages.length; i++) {
+                    if (message._id == messages[i]._id) {
+                        message.numReactions[reaction] = String(
+                            increment
+                                ? Number(message.numReactions[reaction]) - 1
+                                : Number(message.numReactions[reaction]) + 1
+                        );
+                        message.reactions[reaction] = !increment;
+                        break;
+                    }
+                }
                 setMessages([...messages]);
             });
     };
