@@ -13,6 +13,7 @@ import LightBulbIcon from '../assets/light_bulb.svg';
 import SkullIcon from '../assets/skull.svg';
 import ThumbsDownIcon from '../assets/thumbs_down.svg';
 import ThumbsUpIcon from '../assets/thumbs_up.svg';
+import TrashIcon from '../assets/trash.svg';
 
 const reactionsEnum = {
     FIRE: 0,
@@ -27,9 +28,7 @@ const reactionsEnum = {
 
 export const ReactionBar = (props) => {
     const [hoverAddReaction, setHoverAddReaction] = useState(false);
-
-    const callback = props.callback;
-    const post = props.post;
+    const { callback, post, deleteCallback } = props;
 
     const arrayIcons = [
         FireIcon,
@@ -59,6 +58,7 @@ export const ReactionBar = (props) => {
             style={{
                 display: 'flex',
                 flexDirection: 'row',
+                alignItems: 'center',
             }}
         >
             {post.numReactions.map((value, index) => {
@@ -226,6 +226,23 @@ export const ReactionBar = (props) => {
                     />
                 </Box>
             )}
+            <div
+                style={{
+                    width: 30,
+                    height: 30,
+                    marginLeft: 'auto',
+                }}
+                onClick={() => deleteCallback(post)}
+            >
+                <img
+                    style={{
+                        width: 30,
+                        height: 30,
+                    }}
+                    src={TrashIcon}
+                    alt='Trash'
+                />
+            </div>
         </div>
     );
 };

@@ -7,7 +7,7 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
 export const Post = (props) => {
-    const { post, reactCallback } = props;
+    const { post, reactCallback, deleteCallback } = props;
 
     return (
         <Box
@@ -16,6 +16,8 @@ export const Post = (props) => {
             sx={{
                 p: 2,
                 my: 2,
+                display: 'flex',
+                flexDirection: 'column',
             }}
         >
             <Typography color={'#D17A22'} fontSize={22}>
@@ -34,7 +36,11 @@ export const Post = (props) => {
                 </Link>{' '}
                 • {timeAgo.format(new Date(post.time))}
             </Typography>
-            <ReactionBar callback={reactCallback} post={post} />
+            <ReactionBar
+                callback={reactCallback}
+                post={post}
+                deleteCallback={deleteCallback}
+            />
         </Box>
     );
 };

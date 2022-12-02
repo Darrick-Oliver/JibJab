@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/SendOutlined';
 import theme from './theme';
 import { AuthContext } from '../App';
-import { makePostRequest } from '../utils/requests';
+import { makePostRequest, makeDeleteRequest } from '../utils/requests';
 import { Header } from '../components/header';
 import { Post } from '../components/post';
 import { invalidUserChecker } from '../utils/checkErrors';
@@ -309,6 +309,30 @@ const Messages = (props) => {
             });
     };
 
+    const handleDelete = async (message) => {
+        makeDeleteRequest(`/api/message/delete/${message._id}`, {
+            accesstoken: auth,
+        })
+            .then(() => {
+                for (let i = 0; i < messages.length; i++) {
+                    if (message._id == messages[i]._id) {
+                        messages.splice(i, 1);
+                    }
+                }
+                setMessages([...messages]);
+            })
+            .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                } else {
+                    console.error(err.errorMessage);
+                }
+            });
+    };
+
     return (
         <Box sx={{ mt: 15 }}>
             {messages ? (
@@ -318,6 +342,7 @@ const Messages = (props) => {
                             post={value}
                             key={`comments-${value.user.username}-${index}`}
                             reactCallback={handleReaction}
+                            deleteCallback={handleDelete}
                         />
                     );
                 })
