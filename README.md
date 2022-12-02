@@ -1,6 +1,6 @@
 # JibJab
 
-![Backend Node.js Workflow] (https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml/badge.svg?branch=integ)
+![Backend Node.js Workflow](https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml/badge.svg?branch=integ)
 
 
 307 Project
