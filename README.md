@@ -23,15 +23,13 @@ Figma(10/17): https://www.figma.com/file/YJzhS3b0bL3EnkYT3zyEEh/Young-Socialites
 ### npm i
 
 ### Setting up ESLint:
-
-npm init @eslint/config --save-dev
+	npm init @eslint/config --save-dev
 
 
 ### Setting up Prettier:
-
-npm i prettier --save-dev
-npm i prettierrc --save-dev
-npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
+	npm i prettier --save-dev
+	npm i prettierrc --save-dev
+	npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
 
 #### add plugin:prettier/recommended to extends:
     "plugin:prettier/recommended"
