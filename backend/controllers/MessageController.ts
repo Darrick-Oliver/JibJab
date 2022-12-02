@@ -9,6 +9,7 @@ import Message, { IMessage } from '../models/Message';
 import { successMessage, errorMessage } from '../utils/returns';
 import 'dotenv/config';
 import { CurrentUser } from 'routing-controllers';
+import { ObjectId } from 'mongodb';
 
 @JsonController()
 export class MessageController {
@@ -35,6 +36,8 @@ export class MessageController {
                 type: 'Point',
                 coordinates: [longitude, latitude],
             },
+            reactions: [[], [], [], [], [], [], [], []],
+            numReactions: [0, 0, 0, 0, 0, 0, 0, 0],
         };
 
         const m = new Message(messageInfo);
@@ -49,7 +52,70 @@ export class MessageController {
                 },
                 time: m.time,
                 message: m.message,
+                numReactions: m.numReactions,
             });
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw errorMessage(err);
+            } else if (err instanceof Error) {
+                throw errorMessage(err.message);
+            } else {
+                throw errorMessage('Unknown error');
+            }
+        }
+    }
+
+    @HttpCode(201)
+    @Post('/message/react')
+    async react(
+        @CurrentUser() user: any,
+        @BodyParam('messageid') messageid: ObjectId,
+        @BodyParam('reaction') reactionIndex: number,
+        @BodyParam('increment') increment: boolean
+    ) {
+        if (
+            !messageid ||
+            reactionIndex === undefined ||
+            increment === undefined
+        )
+            throw errorMessage('Cannot include null values');
+
+        const reactionArray = await Message.findById(
+            messageid,
+            'reactions numReactions'
+        ).lean();
+        if (!reactionArray) throw errorMessage('Message not found');
+
+        if (increment) {
+            if (
+                !reactionArray.reactions[reactionIndex].includes(user.username)
+            ) {
+                reactionArray.reactions[reactionIndex].push(user.username);
+                reactionArray.numReactions[reactionIndex] =
+                    Number(reactionArray.numReactions[reactionIndex]) + 1;
+            } else throw errorMessage('Repeat Reaction');
+        } else {
+            //decrement
+            if (
+                reactionArray.reactions[reactionIndex].includes(user.username)
+            ) {
+                const idx = reactionArray.reactions[reactionIndex].indexOf(
+                    user.username
+                );
+                reactionArray.reactions[reactionIndex].splice(idx, 1);
+                //removeItem(user.username, reactionArray.reactions[reactionIndex]);
+                reactionArray.numReactions[reactionIndex] =
+                    Number(reactionArray.numReactions[reactionIndex]) - 1;
+            } else
+                throw errorMessage('You have not reacted with this reaction');
+        }
+
+        try {
+            await Message.findByIdAndUpdate(messageid, {
+                reactions: reactionArray.reactions,
+                numReactions: reactionArray.numReactions,
+            });
+            return successMessage();
         } catch (err) {
             if (typeof err === 'string') {
                 throw errorMessage(err);
@@ -72,7 +138,7 @@ export class MessageController {
         if (!latitude || !longitude || !distance)
             throw errorMessage('Cannot include null values');
 
-        const messages = await Message.find({
+        const messages: any = await Message.find({
             location: {
                 $near: {
                     $geometry: {
@@ -89,7 +155,29 @@ export class MessageController {
                 user: 1,
                 message: 1,
                 time: 1,
+                reactions: 1,
+                numReactions: 1,
             });
+
+        if (!messages) {
+            throw errorMessage('No messages found');
+        }
+        //const userReactionCheck: any[][] = [];
+        for (let m = 0; m < messages.length; m++) {
+            let curr = [] as boolean[];
+            for (let i = 0; i < 8; i++) {
+                //console.log(messages[m]);
+                if (messages[m].reactions[i].includes(user.username)) {
+                    curr.push(true);
+                } else {
+                    curr.push(false);
+                }
+            }
+            //delete messages[m].reactions;
+            messages[m].reactions = curr;
+        }
+        //console.log('MESSAGES');
+        //console.log(messages);
 
         return successMessage(messages);
     }

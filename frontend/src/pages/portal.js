@@ -66,6 +66,8 @@ export const Portal = () => {
                     return new Date(b.time) - new Date(a.time);
                 });
                 setMessages(sorted);
+                console.log('HERE CONSOLE LOG PRINT');
+                console.log(res.data);
             })
             .catch((err) => {
                 // Log user out if invalid token
@@ -163,7 +165,7 @@ export const Portal = () => {
                     value={radius}
                     marks={marks}
                 />
-                <Messages messages={messages} />
+                <Messages messages={messages} setMessages={setMessages} />
             </Container>
         </ThemeProvider>
     );
@@ -242,7 +244,71 @@ const MessageBox = ({ onPress }) => {
     );
 };
 
-const Messages = ({ messages }) => {
+const Messages = (props) => {
+    const [auth, setAuth] = useContext(AuthContext);
+    const { messages, setMessages } = props;
+    const nav = useNavigate();
+
+    const handleReaction = async (message, reaction, increment) => {
+        // update before post and error check
+        // for (let i = 0; i < messages.length; i++) {
+        //     if (message._id == messages[i]._id) {
+        //         message.numReactions[reaction] = String(
+        //             Number(message.numReactions[reaction]) + 1
+        //         );
+        //         message.reactions[reaction] = true;
+        //         break;
+        //     }
+        // }
+        //setMessages([...messages]);
+        makePostRequest(
+            '/api/message/react',
+            {
+                reaction: reaction,
+                messageid: message._id,
+                increment: increment,
+            },
+            {
+                accesstoken: auth,
+            }
+        )
+            .then(() => {
+                // find msg by id, update msg state w reaction
+                for (let i = 0; i < messages.length; i++) {
+                    if (message._id == messages[i]._id) {
+                        message.numReactions[reaction] = String(
+                            increment
+                                ? Number(message.numReactions[reaction]) + 1
+                                : Number(message.numReactions[reaction]) - 1
+                        );
+                        message.reactions[reaction] = increment;
+                        break;
+                    }
+                }
+                setMessages([...messages]);
+            })
+            .catch((err) => {
+                // Log user out if invalid token
+                if (invalidUserChecker(err.errorMessage)) {
+                    setAuth(null);
+                    localStorage.removeItem('jwt');
+                    nav('/');
+                } else {
+                    console.error(err.errorMessage);
+                }
+                // for (let i = 0; i < messages.length; i++) {
+                //     if (message._id == messages[i]._id) {
+                //         message.numReactions[reaction] = String(
+                //             Number(message.numReactions[reaction]) - 1
+                //         );
+                //         message.reactions[reaction] = false;
+                //         break;
+                //     }
+                // }
+                setMessages([...messages]);
+            });
+    };
+
     return (
         <Box sx={{ mt: 15 }}>
             {messages ? (
@@ -251,6 +317,7 @@ const Messages = ({ messages }) => {
                         <Post
                             post={value}
                             key={`comments-${value.user.username}-${index}`}
+                            reactCallback={handleReaction}
                         />
                     );
                 })
