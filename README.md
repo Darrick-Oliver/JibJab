@@ -2,7 +2,7 @@
 
 ![Backend Node.js Workflow](https://github.com/Darrick-Oliver/JibJab/actions/workflows/node.js.yml/badge.svg?branch=integ)
 
-![Backend Node.js Workflow](https://github.com/Darrick-Oliver/JibJab/actions/workflows/main_jibjab.yml/badge.svg?branch=integ)
+![Build and Deploy Node.js to Azure](https://github.com/Darrick-Oliver/JibJab/actions/workflows/main_jibjab.yml/badge.svg?branch=integ)
 
 
 307 Project
