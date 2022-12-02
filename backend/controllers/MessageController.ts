@@ -36,7 +36,8 @@ export class MessageController {
                 type: 'Point',
                 coordinates: [longitude, latitude],
             },
-            reactions: [[], [], [], [], [], [], [], []]
+            reactions: [[], [], [], [], [], [], [], []],
+            numReactions: [0, 0, 0, 0, 0, 0, 0, 0]
         };
 
         const m = new Message(messageInfo);
@@ -51,7 +52,7 @@ export class MessageController {
                 },
                 time: m.time,
                 message: m.message,
-                reactions: [0, 0, 0, 0, 0, 0, 0, 0]
+                numReactions: m.numReactions
             });
         } catch (err) {
             if (typeof err === 'string') {
@@ -74,15 +75,23 @@ export class MessageController {
         if (!messageid || !reactionIndex)
             throw errorMessage('Cannot include null values');
         
-        const reactionArray = await Message.findById(messageid, 'reactions').lean()
+        const reactionArray = await Message.findById(messageid, 'reactions numReaction').lean()
             if (!reactionArray)
                 throw errorMessage('Message not found');
 
-        if (!reactionArray.reactions[reactionIndex].includes(user))
+        if (!reactionArray.reactions[reactionIndex].includes(user)) {
             reactionArray.reactions[reactionIndex].push(user)
+            reactionArray.numReactions[reactionIndex] = 
+                Number(reactionArray.numReactions[reactionIndex]) + 1
+        }
+        else
+            throw errorMessage('Repeat Reaction')
         
         try {
-            await Message.findByIdAndUpdate(messageid, { reactions: reactionArray.reactions })
+            await Message.findByIdAndUpdate(messageid, { 
+                reactions: reactionArray.reactions,
+                numReactions: reactionArray.numReactions
+            })
             return successMessage();
         } catch (err) {
             if (typeof err === 'string') {
@@ -123,11 +132,25 @@ export class MessageController {
                 user: 1,
                 message: 1,
                 time: 1,
-                reactions: 1
+                reactions: 1,
+                numReactions: 1
             });
         if (!messages) {
             throw errorMessage('No messages found');
         }
-        return successMessage(messages);
+        const userReactionCheck: any[][] = [];
+        for (let m = 0; m < messages.length; m++) {
+            let curr = [] as boolean[]
+            for (let i = 0; i < 7; i++) {
+                if (messages[m].reactions[i].includes(user.username)) {
+                    curr.push(true)
+                }
+                else {
+                    curr.push(false)
+                }
+            }
+            userReactionCheck.push(curr)
+        }
+        return successMessage({ messages: messages, userReactionCheck: userReactionCheck });
     }
 }

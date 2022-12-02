@@ -62,7 +62,7 @@ export const Portal = () => {
             }
         )
             .then((res) => {
-                const sorted = res.data.sort((a, b) => {
+                const sorted = res.data.messages.sort((a, b) => {
                     return new Date(b.time) - new Date(a.time);
                 });
                 setMessages(sorted);
