@@ -52,8 +52,6 @@ export const ReactionBar = (props) => {
         'LightBulb',
     ];
 
-    console.log(post.numReactions);
-
     return (
         // make outside the mui div, put box with the addreactionicon in the conditional w the icon part
         <div
@@ -215,15 +213,13 @@ export const ReactionBar = (props) => {
                     onMouseOver={() => setHoverAddReaction(true)}
                     onMouseLeave={() => setHoverAddReaction(false)}
                 >
-                    <img // addReactionImage
+                    <img
                         style={{
                             width: 20,
                             height: 20,
-                            //margin: '1px 1px',
                             justifyContent: 'center',
                             alignItems: 'center',
                             display: 'center',
-                            //paddingRight: 4,
                         }}
                         src={AddReactionIcon}
                         alt='AddReaction'
