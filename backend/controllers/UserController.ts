@@ -126,7 +126,10 @@ export class UserController {
 
     @HttpCode(200)
     @Get('/account/messages/:id')
-    async getUserMessages(@CurrentUser() currUser: any, @Param('id') id: string) {
+    async getUserMessages(
+        @CurrentUser() currUser: any,
+        @Param('id') id: string
+    ) {
         const user = await User.findOne({
             username: { $regex: new RegExp(id, 'i') },
         })
@@ -137,7 +140,7 @@ export class UserController {
         }
 
         const messages = await Message.find({
-            user: user._id
+            user: user._id,
         })
             .populate('user', { username: 1, first_name: 1, last_name: 1 })
             .lean()
