@@ -2,6 +2,7 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { Box, Typography, Link } from '@mui/material';
 import { ReactionBar } from './reactionBar';
+import TrashIcon from '../assets/trash.svg';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -34,6 +35,16 @@ export const Post = (props) => {
                 </Link>{' '}
                 • {timeAgo.format(new Date(post.time))}
             </Typography>
+            <img
+                style={{
+                    width: 40,
+                    height: 50,
+                    float: 'right',
+                }}
+                src={TrashIcon}
+                alt='Trash'
+                //onClick={() => callback(post, reactionsEnum.FIRE, true)}
+            />
             <ReactionBar callback={reactCallback} post={post} />
         </Box>
     );

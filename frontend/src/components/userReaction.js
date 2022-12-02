@@ -1,6 +1,5 @@
 import { Box, Typography, Link } from '@mui/material';
 import './reactionBar.css';
-import { reactionsEnum, arrayIcons, arrayIconNames } from './reactionBar.js';
 
 export const UserReaction = (props) => {
     const src = props.src;
