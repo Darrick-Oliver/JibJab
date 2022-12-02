@@ -55,7 +55,10 @@ export const SignUp = () => {
         }
 
         try {
-            const res = await makePostRequest('/api/account/register', user);
+            const res = await makePostRequest(
+                'https://jibjab.azurewebsites.net/api/account/register',
+                user
+            );
             setAuth(res.data.access_token);
             localStorage.setItem('jwt', res.data.access_token);
             nav('/');
