@@ -1,12 +1,13 @@
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { Box, Typography, Link } from '@mui/material';
+import { ReactionBar } from './reactionBar';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
 export const Post = (props) => {
-    const post = props.post;
+    const { post, reactCallback } = props;
 
     return (
         <Box
@@ -33,6 +34,7 @@ export const Post = (props) => {
                 </Link>{' '}
                 • {timeAgo.format(new Date(post.time))}
             </Typography>
+            <ReactionBar callback={reactCallback} />
         </Box>
     );
 };

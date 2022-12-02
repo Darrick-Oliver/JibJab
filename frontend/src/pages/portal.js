@@ -243,6 +243,21 @@ const MessageBox = ({ onPress }) => {
 };
 
 const Messages = ({ messages }) => {
+    const [auth, setAuth] = useContext(AuthContext);
+
+    const handleReaction = async (message, reaction) => {
+        const res = await makePostRequest(
+            '/api/message/react',
+            {
+                reaction: reaction,
+                messageid: message._id,
+            },
+            {
+                accesstoken: auth,
+            }
+        );
+    };
+
     return (
         <Box sx={{ mt: 15 }}>
             {messages ? (
@@ -251,6 +266,7 @@ const Messages = ({ messages }) => {
                         <Post
                             post={value}
                             key={`comments-${value.user.username}-${index}`}
+                            reactCallback={handleReaction}
                         />
                     );
                 })

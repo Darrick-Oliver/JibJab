@@ -1,0 +1,43 @@
+/* The animation code */
+@keyframes expand {
+    from {
+        width: 0;
+    }
+    to {
+        width: 240;
+    }
+}
+
+@keyframes highlighted {
+    from {
+        background-color: rgba(179, 205, 224, 0);
+    }
+    to {
+        background-color: rgba(179, 205, 224, 0.3);
+    }
+}
+
+/* The element to apply the animation to */
+.loadup {
+    height: 50px;
+    min-width: 30px;
+    animation-name: expand;
+    animation-duration: 0.5s;
+    clip: rect(auto, auto, auto, auto);
+}
+
+/* The element to apply the animation to */
+.iconLoad {
+    height: 50px;
+    animation-name: expand;
+    animation-duration: 0.5s;
+    clip: rect(auto, auto, auto, auto);
+}
+
+/* The element to apply the animation to */
+.selected {
+    height: 27px;
+    animation-name: highlighted;
+    animation-duration: 0.01s;
+    clip: rect(auto, auto, auto, auto);
+}

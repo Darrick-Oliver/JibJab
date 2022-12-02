@@ -1,0 +1,17 @@
+/* The animation code */
+@keyframes highlighted {
+    from {
+        background-color: rgba(179, 205, 224, 0);
+    }
+    to {
+        background-color: rgba(179, 205, 224, 0.1);
+    }
+}
+
+/* The element to apply the animation to */
+.icon {
+    height: 27px;
+    animation-name: highlighted;
+    animation-duration: 0.01s;
+    clip: rect(auto, auto, auto, auto);
+}
