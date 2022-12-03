@@ -135,11 +135,12 @@ export class UserController {
         })
             .lean()
             .select('username first_name last_name joined bio');
+
         if (!user) {
             throw errorMessage('User does not exist');
         }
 
-        const messages = await Message.find({
+        const messages: any = await Message.find({
             user: user._id,
         })
             .populate('user', { username: 1, first_name: 1, last_name: 1 })
@@ -151,6 +152,26 @@ export class UserController {
                 reactions: 1,
                 numReactions: 1,
             });
+
+        if (!messages || !messages.length) {
+            throw errorMessage('No messages found');
+        }
+
+        for (let m = 0; m < messages.length; m++) {
+            let userReactions: boolean[] = [];
+
+            // Add all of user's reactions to an array
+            for (let i = 0; i < 8; i++) {
+                if (messages[m].reactions[i].includes(currUser.username)) {
+                    userReactions.push(true);
+                } else {
+                    userReactions.push(false);
+                }
+            }
+
+            // Don't let users see who else reacted
+            messages[m].reactions = userReactions;
+        }
 
         return successMessage(messages);
     }

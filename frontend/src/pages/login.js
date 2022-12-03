@@ -1,36 +1,38 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import {
     Button,
     CssBaseline,
     TextField,
     Grid,
-    Link,
     Box,
     Typography,
     ThemeProvider,
 } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import logo from '../assets/jibJabLogo.png';
 import theme from './theme';
 import { AuthContext } from '../App';
 import { useNavigate } from 'react-router-dom';
 import { makePostRequest } from '../utils/requests';
+import { host } from '../utils/host';
+import Wave from '../assets/wave.svg';
+
+const usingMobile = () => window.screen.width < 480;
 
 export const Login = () => {
-    const [auth, setAuth] = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const [error, setError] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const nav = useNavigate();
+    const signUpRef = useRef();
 
     const handleSubmit = async () => {
         try {
-            const res = await makePostRequest(
-                'https://jibjab.azurewebsites.net/api/account/login',
-                {
-                    email: email,
-                    password: password,
-                }
-            );
+            const res = await makePostRequest(`${host}/api/account/login`, {
+                email: email,
+                password: password,
+            });
             setAuth(res.data.access_token);
             localStorage.setItem('jwt', res.data.access_token);
         } catch (err) {
@@ -45,13 +47,14 @@ export const Login = () => {
                 sx={{
                     display: 'flex',
                     height: '100vh',
-                    flexDirection: 'row',
+                    flexDirection: usingMobile() ? 'column' : 'row',
                 }}
             >
                 <Box
                     sx={{
-                        height: '100%',
-                        boxShadow: 20,
+                        minHeight: usingMobile() && '80%',
+                        width: '100%',
+                        // boxShadow: 20,
                         backgroundColor: 'white',
                         display: 'flex',
                         flex: 2,
@@ -72,7 +75,7 @@ export const Login = () => {
                             paddingBottom: 10,
                         }}
                     />
-                    <Box component='form' noValidate sx={{ mt: 5, width: 500 }}>
+                    <Box component='form' noValidate sx={{ p: 5 }}>
                         <Grid
                             container
                             spacing={2}
@@ -105,7 +108,7 @@ export const Login = () => {
                                 />
                             </Grid>
                             {error && (
-                                <Typography sx={{ color: 'red' }}>
+                                <Typography sx={{ mt: 2, color: 'red' }}>
                                     Error: {error}
                                 </Typography>
                             )}
@@ -113,7 +116,7 @@ export const Login = () => {
                         <Button
                             fullWidth
                             variant='contained'
-                            sx={{ mt: 5, mb: 3, p: 2 }}
+                            sx={{ mt: 2, p: 2 }}
                             onClick={() => handleSubmit()}
                         >
                             <Typography variant='h1' fontSize={24}>
@@ -122,7 +125,36 @@ export const Login = () => {
                         </Button>
                     </Box>
                 </Box>
+                {usingMobile() && (
+                    <>
+                        <div
+                            style={{
+                                display: 'flex',
+                                backgroundColor: 'white',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <KeyboardArrowDownIcon
+                                onClick={() =>
+                                    signUpRef.current.scrollIntoView({
+                                        behavior: 'smooth',
+                                    })
+                                }
+                            />
+                        </div>
+                        <img
+                            style={{
+                                width: '100%',
+                                transform: 'rotate(180deg)',
+                            }}
+                            src={Wave}
+                        />
+                    </>
+                )}
+
                 <Box
+                    ref={signUpRef}
                     sx={{
                         width: '100%',
                         height: '100%',
@@ -144,7 +176,6 @@ export const Login = () => {
                         New to <span style={{ color: '#D17A22' }}>JibJab</span>?
                     </Typography>
                     <Typography
-                        component='body'
                         sx={{ color: '#fff' }}
                         fontSize={20}
                         fontWeight='light'

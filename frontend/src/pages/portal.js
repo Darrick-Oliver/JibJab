@@ -19,6 +19,7 @@ import { makePostRequest, makeDeleteRequest } from '../utils/requests';
 import { Header } from '../components/header';
 import { Post } from '../components/post';
 import { invalidUserChecker } from '../utils/checkErrors';
+import { host } from '../utils/host';
 
 const DEFAULT_RADIUS = 15;
 const RAD_CHANGE_DELAY = 0.5;
@@ -27,7 +28,7 @@ const MARK_END = 30;
 const MARK_STEP = 5;
 
 export const Portal = () => {
-    const [auth, setAuth] = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
     const [lat, setLat] = useState(null);
     const [lng, setLng] = useState(null);
     const [radius, setRadius] = useState(DEFAULT_RADIUS);
@@ -51,7 +52,7 @@ export const Portal = () => {
         if (!lat || !lng) return;
 
         makePostRequest(
-            'https://jibjab.azurewebsites.net/api/message/get',
+            `${host}/api/message/get`,
             {
                 latitude: lat,
                 longitude: lng,
@@ -130,7 +131,7 @@ export const Portal = () => {
             }
 
             const res = await makePostRequest(
-                'https://jibjab.azurewebsites.net/api/message/create',
+                `${host}/api/message/create`,
                 {
                     message: message,
                     latitude: lat,
@@ -243,7 +244,7 @@ const MessageBox = ({ onPress }) => {
 };
 
 const Messages = (props) => {
-    const [auth, setAuth] = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
     const { messages, setMessages } = props;
     const nav = useNavigate();
 
@@ -270,7 +271,7 @@ const Messages = (props) => {
         setMessages([...messages]);
 
         makePostRequest(
-            'https://jibjab.azurewebsites.net/api/message/react',
+            `${host}/api/message/react`,
             {
                 reaction: reaction,
                 messageid: message._id,
@@ -310,12 +311,9 @@ const Messages = (props) => {
     };
 
     const handleDelete = async (message) => {
-        makeDeleteRequest(
-            `https://jibjab.azurewebsites.net/api/message/delete/${message._id}`,
-            {
-                accesstoken: auth,
-            }
-        )
+        makeDeleteRequest(`${host}/api/message/delete/${message._id}`, {
+            accesstoken: auth,
+        })
             .then(() => {
                 for (let i = 0; i < messages.length; i++) {
                     if (message._id == messages[i]._id) {

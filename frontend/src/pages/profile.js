@@ -19,6 +19,9 @@ import {
 import { AuthContext } from '../App';
 import { invalidUserChecker } from '../utils/checkErrors';
 import { Post } from '../components/post';
+import { host } from '../utils/host';
+
+const usingMobile = () => window.screen.width < 480;
 
 const States = {
     viewing: 0,
@@ -27,7 +30,7 @@ const States = {
 
 export const Profile = () => {
     const { id } = useParams();
-    const [auth, setAuth, currUser] = useContext(AuthContext);
+    const { auth, setAuth, user } = useContext(AuthContext);
     const [userInfo, setUserInfo] = useState(null);
     const [userMessages, setUserMessages] = useState(null);
     const [state, setState] = useState(States.viewing);
@@ -36,7 +39,7 @@ export const Profile = () => {
 
     // Get user info
     const getUserInfo = () => {
-        makeGetRequest(`https://jibjab.azurewebsites.net/api/account/${id}`, {
+        makeGetRequest(`${host}/api/account/${id}`, {
             accesstoken: auth,
         })
             .then((data) => {
@@ -63,7 +66,7 @@ export const Profile = () => {
         }
 
         makePostRequest(
-            'https://jibjab.azurewebsites.net/api/account/update/bio',
+            `${host}/api/account/update/bio`,
             { bio: bio },
             {
                 accesstoken: auth,
@@ -97,12 +100,9 @@ export const Profile = () => {
     useEffect(() => {
         if (!userInfo) return;
 
-        makeGetRequest(
-            `https://jibjab.azurewebsites.net/api/account/messages/${id}`,
-            {
-                accesstoken: auth,
-            }
-        )
+        makeGetRequest(`${host}/api/account/messages/${id}`, {
+            accesstoken: auth,
+        })
             .then((res) => {
                 // Update user info
                 setUserMessages(res.data);
@@ -141,7 +141,7 @@ export const Profile = () => {
         setUserMessages([...userMessages]);
 
         makePostRequest(
-            'https://jibjab.azurewebsites.net/api/message/react',
+            `${host}/api/message/react`,
             {
                 reaction: reaction,
                 messageid: message._id,
@@ -181,12 +181,9 @@ export const Profile = () => {
     };
 
     const handleDelete = async (message) => {
-        makeDeleteRequest(
-            `https://jibjab.azurewebsites.net/api/message/delete/${message._id}`,
-            {
-                accesstoken: auth,
-            }
-        )
+        makeDeleteRequest(`${host}/api/message/delete/${message._id}`, {
+            accesstoken: auth,
+        })
             .then(() => {
                 for (let i = 0; i < userMessages.length; i++) {
                     if (message._id == userMessages[i]._id) {
@@ -223,22 +220,25 @@ export const Profile = () => {
                                 flexDirection: 'column',
                             }}
                         >
+                            {/* User's name and join date */}
                             <div
                                 style={{
                                     display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
+                                    flexDirection: usingMobile()
+                                        ? 'column'
+                                        : 'row',
+                                    alignItems: !usingMobile() && 'center',
                                 }}
                             >
                                 <Typography
                                     color={'#D17A22'}
-                                    fontSize={48}
+                                    fontSize={45}
                                     fontWeight={'bold'}
                                 >
                                     {userInfo.first_name} {userInfo.last_name}
                                 </Typography>
                                 <div style={{ flex: 1 }} />
-                                <Typography color={'#fff'} fontSize={20}>
+                                <Typography color={'#fff'} fontSize={18}>
                                     Jabbin{"'"} since{' '}
                                     {new Date(
                                         userInfo.joined
@@ -250,6 +250,21 @@ export const Profile = () => {
                                 </Typography>
                             </div>
 
+                            {/* Separate bio from user info */}
+                            {usingMobile() && userInfo.bio && (
+                                <div
+                                    style={{
+                                        marginTop: 10,
+                                        marginBottom: 10,
+                                        height: 1,
+                                        width: '100%',
+                                        backgroundColor: '#D17A22',
+                                        alignSelf: 'center',
+                                    }}
+                                />
+                            )}
+
+                            {/* Display or edit bio */}
                             {state == States.editing ? (
                                 <>
                                     <TextField
@@ -285,7 +300,8 @@ export const Profile = () => {
                                 </Typography>
                             )}
 
-                            {currUser.username == userInfo.username && (
+                            {/* Modify bio buttons (edit, cancel, submit) */}
+                            {user.username == userInfo.username && (
                                 <div
                                     style={{
                                         display: 'flex',
@@ -325,10 +341,11 @@ export const Profile = () => {
                                 </div>
                             )}
                         </Box>
+
+                        {/* Display user's messages */}
                         {userMessages ? (
                             <Box sx={{ mt: 15 }}>
                                 {userMessages.map((value, index) => {
-                                    console.log(value);
                                     return (
                                         <Post
                                             post={value}
