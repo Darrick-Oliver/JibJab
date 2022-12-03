@@ -12,7 +12,7 @@ import Home from '../assets/home.svg';
 export const Header = () => {
     const [hoverLogout, setHoverLogout] = useState(false);
     const [hoverProfile, setHoverProfile] = useState(false);
-    const [auth, setAuth, user] = useContext(AuthContext);
+    const { setAuth, user } = useContext(AuthContext);
     const nav = useNavigate();
 
     const handleLogout = () => {
