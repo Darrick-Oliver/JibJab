@@ -7,8 +7,10 @@ import { userChecker } from '../utils/userChecker';
 import { Action, Param } from 'routing-controllers';
 import 'dotenv/config';
 import User, { IUser } from '../models/User';
+import { MessageController } from '../controllers/MessageController';
 
 const uc = new UserController();
+const mc = new MessageController();
 jest.setTimeout(10000);
 
 let mongod: MongoMemoryServer;
@@ -271,6 +273,77 @@ test('userController - update bio - failure', async () => {
                 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
                 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
                 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+});
+
+test('userController - getUserMessages - success', async () => {
+    const email = 'helloFresh';
+    const password = 'thisPasswordWorks';
+    const username = 'johnBoi';
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(email, password))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //create test message
+    const resultTwo = await mc.create(
+        'hello',
+        51,
+        50,
+        await currentUser(access_token)
+    );
+
+    //try fetching user messages
+    const result = await uc.getUserMessages(
+        await currentUser(access_token),
+        username
+    );
+    expect(result.error).toBe(false);
+});
+
+test('userController - getUserMessages - failure', async () => {
+    const email = 'helloFresh';
+    const password = 'thisPasswordWorks';
+    const username = 'noUserName';
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(email, password))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //create test message
+    const resultTwo = await mc.create(
+        'hello',
+        51,
+        50,
+        await currentUser(access_token)
+    );
+
+    //try fetching user messages with false username
+    try {
+        const result = await uc.getUserMessages(
+            await currentUser(access_token),
+            username
         );
     } catch (err: any) {
         expect(err.error).toBe(true);
