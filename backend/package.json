@@ -4,7 +4,7 @@
     "description": "JibJab backend",
     "main": "index.js",
     "scripts": {
-        "test": "npm run prettier && npm run jest",
+        "test": "npm run format && npm run prettier && npm run jest",
         "prettier": "prettier --check .",
         "jest": "jest --detectOpenHandles --collectCoverage --forceExit",
         "start": "ts-node ./index.ts",
