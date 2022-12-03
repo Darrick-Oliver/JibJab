@@ -97,9 +97,12 @@ export const Profile = () => {
     useEffect(() => {
         if (!userInfo) return;
 
-        makeGetRequest(`/api/account/messages/${id}`, {
-            accesstoken: auth,
-        })
+        makeGetRequest(
+            `https://jibjab.azurewebsites.net/api/account/messages/${id}`,
+            {
+                accesstoken: auth,
+            }
+        )
             .then((res) => {
                 // Update user info
                 setUserMessages(res.data);
@@ -138,7 +141,7 @@ export const Profile = () => {
         setUserMessages([...userMessages]);
 
         makePostRequest(
-            '/api/message/react',
+            'https://jibjab.azurewebsites.net/api/message/react',
             {
                 reaction: reaction,
                 messageid: message._id,
@@ -178,9 +181,12 @@ export const Profile = () => {
     };
 
     const handleDelete = async (message) => {
-        makeDeleteRequest(`/api/message/delete/${message._id}`, {
-            accesstoken: auth,
-        })
+        makeDeleteRequest(
+            `https://jibjab.azurewebsites.net/api/message/delete/${message._id}`,
+            {
+                accesstoken: auth,
+            }
+        )
             .then(() => {
                 for (let i = 0; i < userMessages.length; i++) {
                     if (message._id == userMessages[i]._id) {
