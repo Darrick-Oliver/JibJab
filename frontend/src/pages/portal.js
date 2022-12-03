@@ -270,7 +270,7 @@ const Messages = (props) => {
         setMessages([...messages]);
 
         makePostRequest(
-            '/api/message/react',
+            'https://jibjab.azurewebsites.net/api/message/react',
             {
                 reaction: reaction,
                 messageid: message._id,
@@ -310,9 +310,12 @@ const Messages = (props) => {
     };
 
     const handleDelete = async (message) => {
-        makeDeleteRequest(`/api/message/delete/${message._id}`, {
-            accesstoken: auth,
-        })
+        makeDeleteRequest(
+            `https://jibjab.azurewebsites.net/api/message/delete/${message._id}`,
+            {
+                accesstoken: auth,
+            }
+        )
             .then(() => {
                 for (let i = 0; i < messages.length; i++) {
                     if (message._id == messages[i]._id) {
