@@ -161,21 +161,24 @@ export class MessageController {
                 numReactions: 1,
             });
 
-        if (!messages) {
+        if (!messages || !messages.length) {
             throw errorMessage('No messages found');
         }
-        //const userReactionCheck: any[][] = [];
+
         for (let m = 0; m < messages.length; m++) {
-            let curr = [] as boolean[];
+            let userReactions: boolean[] = [];
+
+            // Add all of user's reactions to an array
             for (let i = 0; i < 8; i++) {
                 if (messages[m].reactions[i].includes(user.username)) {
-                    curr.push(true);
+                    userReactions.push(true);
                 } else {
-                    curr.push(false);
+                    userReactions.push(false);
                 }
             }
-            //delete messages[m].reactions;
-            messages[m].reactions = curr;
+
+            // Don't let users see who else reacted
+            messages[m].reactions = userReactions;
         }
 
         return successMessage(messages);

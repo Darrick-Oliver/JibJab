@@ -26,7 +26,13 @@ export default function App() {
     };
 
     return (
-        <AuthContext.Provider value={[accessToken, setAccessToken, user]}>
+        <AuthContext.Provider
+            value={{
+                auth: accessToken,
+                setAuth: setAccessToken,
+                user,
+            }}
+        >
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={loggedInRedirect(<Login />)} />

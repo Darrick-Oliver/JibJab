@@ -8,34 +8,17 @@ import {
     Box,
     Typography,
     ThemeProvider,
-    Container,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import theme from './theme';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../App';
 import { makePostRequest } from '../utils/requests';
+import { host } from '../utils/host';
 
-const Copyright = (props) => {
-    return (
-        <Typography
-            variant='body2'
-            color='text.secondary'
-            align='center'
-            {...props}
-        >
-            {'Copyright © '}
-            <Link color='inherit' href='https://mui.com/'>
-                The Young Socialites
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-};
+const usingMobile = () => window.screen.width < 480;
 
 export const SignUp = () => {
-    const [auth, setAuth] = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const [error, setError] = useState();
     const nav = useNavigate();
 
@@ -50,13 +33,25 @@ export const SignUp = () => {
             password: data.get('password'),
         };
 
+        if (
+            !user.first_name ||
+            !user.last_name ||
+            !user.username ||
+            !user.email ||
+            !user.password
+        ) {
+            setError('Cannot include empty fields');
+            return;
+        }
+
         if (user.password != data.get('confirmpassword')) {
             setError('Passwords do not match');
+            return;
         }
 
         try {
             const res = await makePostRequest(
-                'https://jibjab.azurewebsites.net/api/account/register',
+                `${host}/api/account/register`,
                 user
             );
             setAuth(res.data.access_token);
@@ -69,14 +64,22 @@ export const SignUp = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component='main' maxWidth='md'>
-                <CssBaseline />
+            <CssBaseline />
+            <Box
+                sx={{
+                    display: 'flex',
+                    height: '100vh',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
                 <Box
                     sx={{
                         boxShadow: 10,
-                        p: 10,
+                        p: 4,
+                        maxWidth: 700,
+                        minHeight: '90%',
                         backgroundColor: 'white',
-                        marginTop: 8,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -86,15 +89,10 @@ export const SignUp = () => {
                         fontFamily: 'Inter',
                     }}
                 >
-                    <Typography
-                        component='h1'
-                        variant='h2'
-                        color='#D17A22'
-                        fontWeight='bold'
-                    >
+                    <Typography color='#D17A22' fontWeight='bold' fontSize={50}>
                         Jab <span style={{ color: '#000000' }}>with us!</span>
                     </Typography>
-                    <Typography component='h1' variant='h5'>
+                    <Typography fontSize={20}>
                         We just need some information to get you started
                     </Typography>
                     <Box
@@ -168,36 +166,36 @@ export const SignUp = () => {
                                 />
                             </Grid>
                         </Grid>
-                        {error && <Typography>Error: {error}</Typography>}
+                        {error && (
+                            <Typography
+                                variant='h1'
+                                sx={{ mt: 2 }}
+                                color={theme.palette.error.main}
+                            >
+                                Error: {error}
+                            </Typography>
+                        )}
 
                         <Button
                             type='submit'
                             fullWidth
                             variant='contained'
-                            sx={{ mt: 5, mb: 3, p: 2 }}
+                            sx={{ my: 2, p: 1.5 }}
                         >
-                            <Typography component='h1' variant='h5'>
-                                Create Account
-                            </Typography>
+                            <Typography fontSize={20}>Register</Typography>
                         </Button>
-                        <Grid container justifyContent='flex-end'>
-                            <Grid item>
-                                <RouterLink to='/'>
-                                    <Link color='primary'>
-                                        <Typography
-                                            component='h1'
-                                            variant='body1'
-                                        >
-                                            Already have an account? Sign in
-                                        </Typography>
-                                    </Link>
-                                </RouterLink>
-                            </Grid>
-                        </Grid>
                     </Box>
+                    <Link
+                        style={{ cursor: 'pointer' }}
+                        color='primary'
+                        onClick={() => nav('/')}
+                    >
+                        <Typography>
+                            Already have an account? Sign in
+                        </Typography>
+                    </Link>
                 </Box>
-                <Copyright sx={{ mt: 5 }} />
-            </Container>
+            </Box>
         </ThemeProvider>
     );
 };
