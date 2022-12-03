@@ -6,6 +6,8 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import 'dotenv/config';
 import { userChecker } from '../utils/userChecker';
 import { Action } from 'routing-controllers';
+import User from '../models/User';
+import Message, { IMessage } from '../models/Message';
 
 const mc = new MessageController();
 const uc = new UserController();
@@ -19,6 +21,12 @@ const FIRST_NAME = 'John';
 const LAST_NAME = 'Travolta';
 const EMAIL = 'helloFresh';
 const PASSWORD = 'thisPasswordWorks';
+
+const USERNAME2 = 'luki';
+const FIRST_NAME2 = 'Luc';
+const LAST_NAME2 = 'Williams';
+const EMAIL2 = 'testEmail';
+const PASSWORD2 = 'longEnoughPassword';
 
 //helper function to retrieve access_token from header
 const currentUser = (access_token: string) => {
@@ -38,13 +46,9 @@ beforeAll(async () => {
     const mongod = await MongoMemoryServer.create();
     const conn = await mongoose.connect(mongod.getUri(), {});
 
-    const result = await uc.register(
-        USERNAME,
-        FIRST_NAME,
-        LAST_NAME,
-        EMAIL,
-        PASSWORD
-    );
+    await uc.register(USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+
+    await uc.register(USERNAME2, FIRST_NAME2, LAST_NAME2, EMAIL2, PASSWORD2);
 });
 
 //disconnect from database
@@ -157,7 +161,9 @@ test('Test - Send Message - success', async () => {
 });
 
 test('Test - get message - success', async () => {
-    const message = 'Hello';
+    const reactionIndex = 0;
+    const increment = true;
+    const message = 'newMessage';
     const latitude = 51;
     const longitude = 16;
     const distance = 5;
@@ -175,7 +181,22 @@ test('Test - get message - success', async () => {
         fail('no access_token for login');
     }
 
-    //get message
+    const messageRet = await mc.create(
+        message,
+        latitude,
+        longitude,
+        await currentUser(access_token)
+    );
+
+    //react to message
+    await mc.react(
+        await currentUser(access_token),
+        messageRet.data._id,
+        reactionIndex,
+        increment
+    );
+
+    //get message with reactions
     const result = await mc.get(
         await currentUser(access_token),
         latitude,
@@ -247,6 +268,160 @@ test('Test - get message - failure - no messages', async () => {
             latitude,
             longitude,
             distance
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+});
+
+test('Test - message react - all cases', async () => {
+    const reactionIndex = 0;
+    const increment = true;
+    const decrement = false;
+    const message = 'hello';
+    const latitude = 51;
+    const longitude = 50;
+    let access_token = null;
+
+    //get current user by login
+    const data = (await uc.login(EMAIL, PASSWORD))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    //create message
+    const messageRet = await mc.create(
+        message,
+        latitude,
+        longitude,
+        await currentUser(access_token)
+    );
+
+    //react increment
+    const result = await mc.react(
+        await currentUser(access_token),
+        messageRet.data._id,
+        reactionIndex,
+        increment
+    );
+
+    expect(result.error).toBe(false);
+
+    //increment again failure
+    try {
+        await mc.react(
+            await currentUser(access_token),
+            messageRet.data._id,
+            reactionIndex,
+            increment
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+
+    //decrement success
+    const result2 = await mc.react(
+        await currentUser(access_token),
+        messageRet.data._id,
+        reactionIndex,
+        decrement
+    );
+
+    expect(result2.error).toBe(false);
+
+    //decrement twice failure
+    try {
+        const result3 = await mc.react(
+            await currentUser(access_token),
+            messageRet.data._id,
+            reactionIndex,
+            decrement
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+
+    //decrement with false id check null fields
+    try {
+        const result3 = await mc.react(
+            await currentUser(access_token),
+            messageRet._id,
+            reactionIndex,
+            decrement
+        );
+    } catch (err: any) {
+        expect(err.error).toBe(true);
+    }
+});
+
+test('Test - message delete - success', async () => {
+    const reactionIndex = 0;
+    const increment = true;
+    const message = 'coolMessage';
+    const message2 = 'wowMessage';
+    const latitude = 51;
+    const longitude = 50;
+    let access_token = null;
+    let access_token2 = null;
+
+    //get current user by login
+    const data = (await uc.login(EMAIL, PASSWORD))?.data;
+    if (data instanceof Object) {
+        (Object.keys(data) as (keyof typeof data)[]).find((key) => {
+            access_token = data[key];
+        });
+    }
+
+    if (!access_token) {
+        fail('no access_token for login');
+    }
+
+    const data2 = (await uc.login(EMAIL2, PASSWORD2))?.data;
+    if (data2 instanceof Object) {
+        (Object.keys(data2) as (keyof typeof data2)[]).find((key) => {
+            access_token2 = data2[key];
+        });
+    }
+
+    if (!access_token2) {
+        fail('no access_token for login');
+    }
+
+    //create test message
+    const messageRet = await mc.create(
+        message,
+        latitude,
+        longitude,
+        await currentUser(access_token)
+    );
+
+    //create test message by diff user
+    const messageRet2 = await mc.create(
+        message,
+        latitude,
+        longitude,
+        await currentUser(access_token2)
+    );
+
+    //delete message
+    const result = await mc.delete(
+        await currentUser(access_token),
+        messageRet.data._id
+    );
+
+    expect(result.error).toBe(false);
+
+    //try to delete other users message
+    try {
+        const resultNew = await mc.delete(
+            await currentUser(access_token),
+            messageRet2.data._id
         );
     } catch (err: any) {
         expect(err.error).toBe(true);

@@ -161,7 +161,7 @@ export class MessageController {
                 numReactions: 1,
             });
 
-        if (!messages) {
+        if (!messages || !messages.length) {
             throw errorMessage('No messages found');
         }
         //const userReactionCheck: any[][] = [];
