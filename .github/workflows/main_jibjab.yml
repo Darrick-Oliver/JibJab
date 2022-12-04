@@ -3,6 +3,13 @@
 
 name: Build and deploy Node.js app to Azure Web App - JibJab
 
+env:
+  PORT: ${{ secrets.PORT }}
+  MONGO_PWD: ${{ secrets.MONGO_PWD }}
+  MONGO_USER: ${{ secrets.MONGO_USER }}
+  MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
 on:
   push:
     branches:
@@ -22,6 +29,12 @@ jobs:
           node-version: '18.x'
 
       - name: npm install, build, and test
+        env:
+          PORT: ${{ secrets.PORT }}
+          MONGO_PWD: ${{ secrets.MONGO_PWD }}
+          MONGO_USER: ${{ secrets.MONGO_USER }}
+          MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         working-directory: backend
         run: |
           npm install
