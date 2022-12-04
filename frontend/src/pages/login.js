@@ -16,8 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { makePostRequest } from '../utils/requests';
 import { host } from '../utils/host';
 import Wave from '../assets/wave.svg';
-
-const usingMobile = () => window.screen.width < 480;
+import { usingMobile } from '../hooks/windowDimensions';
+import { SignUpTutorial } from '../components/signUpTutorial';
 
 export const Login = () => {
     const { setAuth } = useContext(AuthContext);
@@ -26,6 +26,7 @@ export const Login = () => {
     const [password, setPassword] = useState();
     const nav = useNavigate();
     const signUpRef = useRef();
+    const mobile = usingMobile();
 
     const handleSubmit = async () => {
         try {
@@ -47,12 +48,12 @@ export const Login = () => {
                 sx={{
                     display: 'flex',
                     height: '100vh',
-                    flexDirection: usingMobile() ? 'column' : 'row',
+                    flexDirection: mobile ? 'column' : 'row',
                 }}
             >
                 <Box
                     sx={{
-                        minHeight: usingMobile() && '80%',
+                        minHeight: mobile && '80%',
                         width: '100%',
                         // boxShadow: 20,
                         backgroundColor: 'white',
@@ -125,7 +126,7 @@ export const Login = () => {
                         </Button>
                     </Box>
                 </Box>
-                {usingMobile() && (
+                {mobile && (
                     <>
                         <div
                             style={{
@@ -167,41 +168,7 @@ export const Login = () => {
                         p: 5,
                     }}
                 >
-                    <Typography
-                        component='h1'
-                        color='#fff'
-                        fontWeight='bold'
-                        fontSize={32}
-                    >
-                        New to <span style={{ color: '#D17A22' }}>JibJab</span>?
-                    </Typography>
-                    <Typography
-                        sx={{ color: '#fff' }}
-                        fontSize={20}
-                        fontWeight='light'
-                        textAlign='center'
-                    >
-                        Join now to build connections with other young
-                        socialites around you, and engage with others in a fun
-                        environment
-                    </Typography>
-                    <Button
-                        variant='secondary'
-                        sx={{
-                            mt: 5,
-                            p: 2,
-                            width: 300,
-                        }}
-                        onClick={() => nav('/signup')}
-                    >
-                        <Typography
-                            variant='h1'
-                            fontSize={24}
-                            color={'#D17A22'}
-                        >
-                            Sign up
-                        </Typography>
-                    </Button>
+                    <SignUpTutorial />
                 </Box>
             </Box>
         </ThemeProvider>

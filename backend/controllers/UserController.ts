@@ -68,6 +68,28 @@ export class UserController {
     }
 
     @HttpCode(200)
+    @Post('/account/available/')
+    async available(
+        @BodyParam('username') username?: string,
+        @BodyParam('email') email?: string
+    ) {
+        if (!username && !email) {
+            throw errorMessage('Must include a username or email');
+        }
+
+        let taken: any = {};
+        if (username) {
+            const user = await User.findOne({ username: { $regex: new RegExp(username, 'i') } }).lean();
+            taken.username = user ? false : true;
+        }
+        if (email) {
+            const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } }).lean();
+            taken.email = user ? false : true;
+        }
+        return successMessage(taken);
+    }
+
+    @HttpCode(200)
     @Post('/account/login')
     async login(
         @BodyParam('email') email: string,
@@ -154,7 +176,7 @@ export class UserController {
             });
 
         if (!messages || !messages.length) {
-            throw errorMessage('No messages found');
+            return successMessage([]);
         }
 
         for (let m = 0; m < messages.length; m++) {

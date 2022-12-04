@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from './pages/login';
-import { SignUp } from './pages/signup';
 import { Portal } from './pages/portal';
 import { Profile } from './pages/profile';
 import { NotFound } from './pages/notFound';
@@ -36,10 +35,6 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={loggedInRedirect(<Login />)} />
-                    <Route
-                        path='/signup'
-                        element={loggedInRedirect(<SignUp />)}
-                    />
                     <Route path='/portal' element={loginRequired(<Portal />)} />
                     <Route
                         path='/profile/:id'
