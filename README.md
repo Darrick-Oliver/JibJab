@@ -36,3 +36,4 @@ https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 #### Command to run prettier format in `./frontend` and `./backend`:
 	npm run format
+		
