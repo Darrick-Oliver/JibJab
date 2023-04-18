@@ -162,7 +162,7 @@ export class MessageController {
             });
 
         if (!messages || !messages.length) {
-            throw errorMessage('No messages found');
+            return successMessage([]);
         }
 
         for (let m = 0; m < messages.length; m++) {

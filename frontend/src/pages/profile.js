@@ -20,8 +20,7 @@ import { AuthContext } from '../App';
 import { invalidUserChecker } from '../utils/checkErrors';
 import { Post } from '../components/post';
 import { host } from '../utils/host';
-
-const usingMobile = () => window.screen.width < 480;
+import { usingMobile } from '../hooks/windowDimensions';
 
 const States = {
     viewing: 0,
@@ -31,11 +30,12 @@ const States = {
 export const Profile = () => {
     const { id } = useParams();
     const { auth, setAuth, user } = useContext(AuthContext);
-    const [userInfo, setUserInfo] = useState(null);
-    const [userMessages, setUserMessages] = useState(null);
+    const [userInfo, setUserInfo] = useState(undefined);
+    const [userMessages, setUserMessages] = useState(undefined);
     const [state, setState] = useState(States.viewing);
     const [bio, setBio] = useState('');
     const nav = useNavigate();
+    const mobile = usingMobile();
 
     // Get user info
     const getUserInfo = () => {
@@ -105,7 +105,10 @@ export const Profile = () => {
         })
             .then((res) => {
                 // Update user info
-                setUserMessages(res.data);
+                const sorted = res.data.sort((a, b) => {
+                    return new Date(b.time) - new Date(a.time);
+                });
+                setUserMessages(sorted);
             })
             .catch((err) => {
                 // Log user out if invalid token
@@ -208,7 +211,7 @@ export const Profile = () => {
         <ThemeProvider theme={theme}>
             <Header />
             <Container component='main' maxWidth='md'>
-                {userInfo && (
+                {userInfo !== undefined && (
                     <>
                         <Box
                             sx={{
@@ -224,10 +227,8 @@ export const Profile = () => {
                             <div
                                 style={{
                                     display: 'flex',
-                                    flexDirection: usingMobile()
-                                        ? 'column'
-                                        : 'row',
-                                    alignItems: !usingMobile() && 'center',
+                                    flexDirection: mobile ? 'column' : 'row',
+                                    alignItems: !mobile && 'center',
                                 }}
                             >
                                 <Typography
@@ -251,7 +252,7 @@ export const Profile = () => {
                             </div>
 
                             {/* Separate bio from user info */}
-                            {usingMobile() && userInfo.bio && (
+                            {mobile && userInfo.bio && (
                                 <div
                                     style={{
                                         marginTop: 10,
@@ -343,7 +344,7 @@ export const Profile = () => {
                         </Box>
 
                         {/* Display user's messages */}
-                        {userMessages ? (
+                        {userMessages !== undefined ? (
                             <Box sx={{ mt: 15 }}>
                                 {userMessages.map((value, index) => {
                                     return (

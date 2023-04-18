@@ -14,8 +14,7 @@ import SkullIcon from '../assets/skull.svg';
 import ThumbsDownIcon from '../assets/thumbs_down.svg';
 import ThumbsUpIcon from '../assets/thumbs_up.svg';
 import TrashIcon from '../assets/trash.svg';
-
-const usingMobile = () => window.screen.width < 480;
+import { usingMobile } from '../hooks/windowDimensions';
 
 const reactionsEnum = {
     FIRE: 0,
@@ -43,6 +42,7 @@ export const ReactionBar = (props) => {
     const [hoverAddReaction, setHoverAddReaction] = useState(false);
     const { callback, post, deleteCallback } = props;
     const { user } = useContext(AuthContext);
+    const mobile = usingMobile();
 
     return (
         <div
@@ -54,8 +54,8 @@ export const ReactionBar = (props) => {
         >
             <div
                 style={{
-                    display: !usingMobile() && 'flex',
-                    flexDirection: usingMobile() && 'row',
+                    display: !mobile && 'flex',
+                    flexDirection: mobile && 'row',
                 }}
             >
                 {post.numReactions.map((value, index) => {
