@@ -34,13 +34,22 @@ export default function App() {
         >
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={loggedInRedirect(<Login />)} />
-                    <Route path='/portal' element={loginRequired(<Portal />)} />
                     <Route
+                        exact
+                        path='/'
+                        element={loggedInRedirect(<Login />)}
+                    />
+                    <Route
+                        exact
+                        path='/portal'
+                        element={loginRequired(<Portal />)}
+                    />
+                    <Route
+                        exact
                         path='/profile/:id'
                         element={loginRequired(<Profile />)}
                     />
-                    <Route path='/404' element={<NotFound />} />
+                    <Route exact path='/404' element={<NotFound />} />
                     <Route path='*' element={<Navigate to='/404' />} />
                 </Routes>
             </BrowserRouter>

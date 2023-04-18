@@ -79,11 +79,15 @@ export class UserController {
 
         let taken: any = {};
         if (username) {
-            const user = await User.findOne({ username: { $regex: new RegExp(username, 'i') } }).lean();
+            const user = await User.findOne({
+                username: { $regex: new RegExp(`\\b${username}\\b`, 'i') },
+            }).lean();
             taken.username = user ? false : true;
         }
         if (email) {
-            const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } }).lean();
+            const user = await User.findOne({
+                email: { $regex: new RegExp(`\\b${email}\\b`, 'i') },
+            }).lean();
             taken.email = user ? false : true;
         }
         return successMessage(taken);
@@ -119,7 +123,7 @@ export class UserController {
     @Get('/account/:id')
     async accountGet(@CurrentUser() currUser: any, @Param('id') id: string) {
         const user = await User.findOne({
-            username: { $regex: new RegExp(id, 'i') },
+            username: { $regex: new RegExp(`\\b${id}\\b`, 'i') },
         })
             .lean()
             .select('username first_name last_name joined bio');
@@ -153,7 +157,7 @@ export class UserController {
         @Param('id') id: string
     ) {
         const user = await User.findOne({
-            username: { $regex: new RegExp(id, 'i') },
+            username: { $regex: new RegExp(`\\b${id}\\b`, 'i') },
         })
             .lean()
             .select('username first_name last_name joined bio');
