@@ -4,7 +4,7 @@ export interface IChat {
     group: mongoose.Types.ObjectId;
     user: mongoose.Types.ObjectId;
     message: string;
-    time: Date;
+    createdOn: Date;
 }
 
 const ChatSchema: Schema = new Schema<IChat>({
@@ -23,7 +23,7 @@ const ChatSchema: Schema = new Schema<IChat>({
         required: true,
         maxLength: 280,
     },
-    time: { type: Date, required: true },
+    createdOn: { type: Date, required: true },
 });
 ChatSchema.index({ location: '2dsphere' });
 

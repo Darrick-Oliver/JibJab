@@ -4,7 +4,7 @@ export interface IGroupChat {
     creator: ObjectId;
     title: string;
     description: string;
-    last_post: Date;
+    lastPost: Date;
     location: ILoc;
 }
 
@@ -27,11 +27,11 @@ const GroupChatSchema: Schema = new Schema<IGroupChat>({
     description: {
         type: String,
         required: true,
-        maxLength: 280
+        maxLength: 280,
     },
-    last_post: { 
+    lastPost: {
         type: Date,
-        required: true 
+        required: true,
     },
     location: {
         type: {
@@ -43,7 +43,7 @@ const GroupChatSchema: Schema = new Schema<IGroupChat>({
             type: [Number],
             required: true,
         },
-    }
+    },
 });
 GroupChatSchema.index({ location: '2dsphere' });
 
