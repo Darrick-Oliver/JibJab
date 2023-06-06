@@ -1,5 +1,4 @@
 import { Schema, model, ObjectId } from 'mongoose';
-import { IUser } from './User';
 
 export interface IMessage {
     user: ObjectId;
