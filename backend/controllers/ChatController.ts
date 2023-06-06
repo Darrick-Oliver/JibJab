@@ -94,7 +94,7 @@ export class ChatController {
         @CurrentUser({ required: true }) _: any
     ) {
         // Find group within range
-        const group = await GroupChat.findOne({
+        const groups = await GroupChat.findOne({
             _id: groupId,
             location: {
                 $near: {
@@ -107,7 +107,9 @@ export class ChatController {
             },
         }).lean();
 
-        if (!group) {
+        console.log(groups);
+
+        if (!groups) {
             throw errorMessage('Group not found');
         }
 
@@ -143,6 +145,7 @@ export class ChatController {
                         type: 'Point',
                         coordinates: [longitude, latitude],
                     },
+                    $maxDistance: min(MAX_DISTANCE, distance) * 1609.344, // Convert to meters
                 },
             },
         })
@@ -158,9 +161,8 @@ export class ChatController {
                 creator: 1,
                 title: 1,
                 description: 1,
-                lastPost: 1
+                lastPost: 1,
             });
-        
 
         if (!groups) {
             throw errorMessage('No groups found');
