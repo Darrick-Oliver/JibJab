@@ -27,7 +27,7 @@ export const chatServer = () => {
             socket: Socket,
             next: (err?: ExtendedError | undefined) => void
         ) => {
-            const accessToken = socket.handshake.query.accessToken as string;
+            const accessToken = socket.handshake.auth.accessToken as string;
             jwt.verify(
                 accessToken,
                 process.env.JWT_SECRET!,
@@ -45,17 +45,16 @@ export const chatServer = () => {
                             return next();
                         }
                     }
-                    return next();
+                    return errorMessage(err?.message || "Group or user not found")
                 }
             );
         }
     ).on(Event.CONNECT, async (socket: Socket) => {
         const user: LeanDocument<IUser & { _id: Types.ObjectId }> =
             socket.data.user;
-        const groupId = socket.handshake.query.group as string;
-        const latitude = socket.handshake.query.latitude as string;
-        const longitude = socket.handshake.query.longitude as string;
-        const distance = Number(socket.handshake.query.distance as string);
+        const groupId = socket.handshake.auth.groupId as string;
+        const latitude = socket.handshake.auth.latitude as string;
+        const longitude = socket.handshake.auth.longitude as string;
 
         // Find group within range
         const group = await GroupChat.findOne({
@@ -66,7 +65,7 @@ export const chatServer = () => {
                         type: 'Point',
                         coordinates: [longitude, latitude],
                     },
-                    $maxDistance: min(MAX_DISTANCE, distance) * 1609.344, // Convert to meters
+                    $maxDistance: MAX_DISTANCE * 1609.344, // Convert to meters
                 },
             },
         }).lean();
@@ -75,29 +74,35 @@ export const chatServer = () => {
             return;
         }
 
-        console.log(`${user} has joined ${group}`);
+        console.log(`${user.username} has joined ${group.title}`);
         socket.join(groupId);
 
-        socket.on(Event.MESSAGE, async (message: string) => {
+        socket.on(Event.MESSAGE, async (req: { message: string }) => {
             // Create chat message
             const chatData: IChat = {
                 group: group._id,
                 user: user._id,
-                message: message,
+                message: req.message,
                 createdOn: new Date(),
             };
-            const chat = new Chat(chatData);
+            const chat = await new Chat(chatData).populate('user', { username: 1, first_name: 1, last_name: 1 });
 
             // Save to database
             await chat.save();
 
-            // TODO: update group time
+            // Update last activity time in group
+            await GroupChat.updateOne({
+                _id: groupId
+            }, {
+                lastPost: new Date()
+            });
 
             // Send to others on socket
             io.to(groupId).emit(Event.MESSAGE, chat);
         });
 
         socket.on(Event.DISCONNECT, () => {
+            console.log(`${user.username} has left ${group.title}`);
             socket.leave(groupId);
         });
     });
