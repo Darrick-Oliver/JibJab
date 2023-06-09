@@ -107,8 +107,6 @@ export class ChatController {
             },
         }).lean();
 
-        console.log(groups);
-
         if (!groups) {
             throw errorMessage('Group not found');
         }
@@ -117,12 +115,12 @@ export class ChatController {
         const chats = await Chat.find(
             {
                 group: groupId,
-            },
-            {
-                skip: page * min(MAX_TAKE, take),
-                limit: min(MAX_TAKE, take),
             }
-        ).sort('-createdOn');
+        )
+        .populate('user', { username: 1, first_name: 1, last_name: 1 })
+        .sort({ createdOn: 'asc' })
+        .skip(page * Math.min(MAX_TAKE, take))
+        .limit(Math.min(MAX_TAKE, take));
 
         return successMessage(chats);
     }
@@ -151,8 +149,7 @@ export class ChatController {
         })
             .populate('creator', { username: 1, first_name: 1, last_name: 1 })
             .sort({
-                location: 1, // Sort by ascending distance
-                lastPost: -1, // Sort by descending lastPost
+                lastPost: -1
             })
             .skip(page * Math.min(MAX_TAKE, take))
             .limit(Math.min(MAX_TAKE, take))
